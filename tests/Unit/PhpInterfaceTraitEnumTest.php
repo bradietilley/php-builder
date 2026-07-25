@@ -8,6 +8,7 @@ use BradieTilley\Builder\PhpProperty;
 use BradieTilley\Builder\PhpPropertyGetHook;
 use BradieTilley\Builder\PhpPropertySetHook;
 use BradieTilley\Builder\PhpTrait;
+use BradieTilley\Builder\Types\PhpNamedType;
 
 test('interface exports signature-only methods', function () {
     $interface = new PhpInterface(
@@ -124,4 +125,17 @@ test('pure enum without backing type', function () {
     expect($enum->toPhp())->toContain('enum Role')
         ->and($enum->toPhp())->not->toContain('enum Role:')
         ->and($enum->toPhp())->toContain('case Admin;');
+});
+
+test('enum backed type accepts PhpType', function () {
+    $enum = new PhpEnum(
+        namespace: 'App\\Enums',
+        name: 'Status',
+        backedType: new PhpNamedType('int'),
+        cases: [
+            new PhpEnumCase(name: 'One', value: '1'),
+        ],
+    );
+
+    expect($enum->toPhp())->toContain('enum Status: int');
 });

@@ -11,10 +11,6 @@ use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
-/**
- * @phpstan-type TemplateList list<PhpTemplate|string>
- */
-
 class PhpClass extends Data implements ExportsPhp
 {
     use ExportsPhpFile;

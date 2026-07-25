@@ -5,7 +5,9 @@ namespace BradieTilley\Builder;
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
 use BradieTilley\Builder\Concerns\HasTypeDoc;
 use BradieTilley\Builder\Contracts\ExportsPhp;
+use BradieTilley\Builder\Contracts\PhpType;
 use BradieTilley\Builder\Support\Indent;
+use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
@@ -17,17 +19,20 @@ class PhpEnum extends Data implements ExportsPhp
     /** @var list<string> */
     public array $implements = [];
 
+    public ?PhpType $backedType = null;
+
     /**
      * @param  list<string>|string  $implements
      * @param  list<PhpEnumCase>  $cases
      * @param  list<PhpClassConstant>  $constants
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<PhpTemplate|string>  $templates
      */
     public function __construct(
         public string $name,
         public string $namespace = '',
-        public ?string $backedType = null,
+        PhpType|string|null $backedType = null,
         array|string $implements = [],
         #[ArrayOf(PhpEnumCase::class)]
         public array $cases = [],
@@ -38,10 +43,10 @@ class PhpEnum extends Data implements ExportsPhp
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public ?string $description = null,
-        /** @var list<PhpTemplate|string> */
         public array $templates = [],
         public bool $strictTypes = true,
     ) {
+        $this->backedType = TypeFactory::make($backedType);
         $this->implements = is_string($implements) ? [$implements] : $implements;
     }
 
@@ -71,7 +76,7 @@ class PhpEnum extends Data implements ExportsPhp
         $signature = 'enum '.$this->name;
 
         if ($this->backedType !== null) {
-            $signature .= ': '.$this->backedType;
+            $signature .= ': '.$this->backedType->toPhp();
         }
 
         if ($implements !== []) {
