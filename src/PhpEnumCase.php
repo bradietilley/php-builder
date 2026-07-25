@@ -14,7 +14,7 @@ class PhpEnumCase extends Data implements ExportsPhp
      */
     public function __construct(
         public string $name,
-        public ?string $value = null,
+        public string|int|null $value = null,
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
     ) {

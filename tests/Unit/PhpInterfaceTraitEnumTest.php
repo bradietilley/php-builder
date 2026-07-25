@@ -133,7 +133,7 @@ test('enum backed type accepts PhpType', function () {
         name: 'Status',
         backedType: new PhpNamedType('int'),
         cases: [
-            new PhpEnumCase(name: 'One', value: '1'),
+            new PhpEnumCase(name: 'One', value: 1),
         ],
     );
 
