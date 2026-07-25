@@ -1,0 +1,114 @@
+# PHP Builder
+
+A PHP class builder
+
+![Static Analysis](https://github.com/bradietilley/php-builder/actions/workflows/static.yml/badge.svg)
+![Tests](https://github.com/bradietilley/php-builder/actions/workflows/tests.yml/badge.svg)
+![Laravel Version](https://img.shields.io/badge/Laravel%20Version-13.x-F9322C)
+![PHP Version](https://img.shields.io/badge/PHP%20Version-8.3-4F5B93)
+
+## Documentation
+
+Full documentation is available at [bradietilley.dev/php-builder](https://bradietilley.dev/php-builder).
+
+## Installation
+
+```bash
+composer require bradietilley/php-builder
+```
+
+```php
+use BradieTilley\Builder\PhpArgument;
+use BradieTilley\Builder\PhpClass;
+use BradieTilley\Builder\PhpMethod;
+use BradieTilley\Builder\Types\PhpArrayType;
+
+$class = new PhpClass(
+    namespace: "App\Models",
+    name: "Post",
+    extends: "App\Models\Model",
+    implements: "App\Models\Contracts\WithSlug",
+    traits: [
+        "App\Models\Concerns\HasSlug",
+    ],
+    constants: [],
+    attributes: [],
+    properties: [],
+    methods: [],
+);
+
+// example for handling clashes (extends already reserved "Model")
+$name = $class->import('Illuminate\Database\Eloquent\Model'); // returns "ModelEloquent"
+
+$class->methods[] = new PhpMethod(
+    visibility: PhpMethod::VISIBILITY_PUBLIC,
+    final: true,
+    name: 'setTags',
+    args: [
+        new PhpArgument(
+            type: new PhpArrayType(value: 'string'),
+            name: 'tags',
+            defaultValue: '[]',
+        ),
+    ],
+    return: $name, // uses the aliased name as the return type
+    lines: [
+        '$tags = Tag::query()->whereIn("name", $tags)->pluck("id");',
+        '$this->tags()->sync($tags);',
+        'return $this;',
+    ],
+    description: 'Set the tags',
+);
+
+$class->toPhp();
+```
+
+Generates:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Models\Concerns\HasSlug;
+use App\Models\Contracts\WithSlug;
+use Illuminate\Database\Eloquent\Model as ModelEloquent;
+
+class Post extends Model implements WithSlug
+{
+    use HasSlug;
+
+    /**
+     * Set the tags
+     *
+     * @param array<string> $tags
+     */
+    final public function setTags(array $tags = []): ModelEloquent
+    {
+        $tags = Tag::query()->whereIn("name", $tags)->pluck("id");
+        $this->tags()->sync($tags);
+        return $this;
+    }
+}
+```
+
+### Post-generation formatting
+
+Optionally register a callback to format full-file output (e.g. via Pint):
+
+```php
+use BradieTilley\Builder\PhpFormatter;
+
+PhpFormatter::using(function (string $php): string {
+    // run pint / php-cs-fixer / custom formatter
+    return $php;
+});
+```
+
+See the [documentation](https://bradietilley.dev/php-builder) for attributes, property hooks, enums, interfaces, and traits.
+
+## Credits
+
+- [Bradie Tilley](https://github.com/bradietilley)
