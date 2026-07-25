@@ -95,7 +95,7 @@ class PhpMethod extends Data implements ExportsPhp
                 return implode("\n", $out);
             }
 
-            $out[] = $close;
+            $out[] = $close.' {';
         } else {
             if ($this->return !== null) {
                 $header .= ': '.$this->return->toPhp();
@@ -108,9 +108,8 @@ class PhpMethod extends Data implements ExportsPhp
             }
 
             $out[] = $prefix.$header;
+            $out[] = $prefix.'{';
         }
-
-        $out[] = $prefix.'{';
 
         foreach ($this->lines as $line) {
             $out[] = $line === '' ? '' : Indent::of($indent + 1).$line;
@@ -135,7 +134,7 @@ class PhpMethod extends Data implements ExportsPhp
             $this->args,
         );
 
-        $multiline = count($rendered) > 2;
+        $multiline = count($rendered) > 1;
 
         foreach ($rendered as $arg) {
             if (str_contains($arg, "\n")) {
