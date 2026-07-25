@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
+use BradieTilley\Builder\Concerns\HasTypeDoc;
 use BradieTilley\Builder\Concerns\HasVisibility;
 use BradieTilley\Builder\Concerns\ResolvesTraitUses;
 use BradieTilley\Builder\Contracts\ExportsPhp;
@@ -13,6 +14,7 @@ use BradieTilley\Data\Data;
 class PhpClass extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
+    use HasTypeDoc;
     use HasVisibility;
     use ResolvesTraitUses;
 
@@ -44,6 +46,7 @@ class PhpClass extends Data implements ExportsPhp
         public array $methods = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
+        public ?string $description = null,
         public bool $abstract = false,
         public bool $final = false,
         public bool $readonly = false,
@@ -92,7 +95,7 @@ class PhpClass extends Data implements ExportsPhp
             $this->traits,
         );
 
-        $body = [];
+        $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
             $body[] = $attribute->toPhp($indent);

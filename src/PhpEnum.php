@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
+use BradieTilley\Builder\Concerns\HasTypeDoc;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
@@ -11,6 +12,7 @@ use BradieTilley\Data\Data;
 class PhpEnum extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
+    use HasTypeDoc;
 
     /** @var list<string> */
     public array $implements = [];
@@ -35,6 +37,7 @@ class PhpEnum extends Data implements ExportsPhp
         public array $methods = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
+        public ?string $description = null,
         public bool $strictTypes = true,
     ) {
         $this->implements = is_string($implements) ? [$implements] : $implements;
@@ -57,7 +60,7 @@ class PhpEnum extends Data implements ExportsPhp
             $this->implements,
         )));
 
-        $body = [];
+        $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
             $body[] = $attribute->toPhp($indent);

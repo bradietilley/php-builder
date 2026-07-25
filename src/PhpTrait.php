@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
+use BradieTilley\Builder\Concerns\HasTypeDoc;
 use BradieTilley\Builder\Concerns\ResolvesTraitUses;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Support\Indent;
@@ -12,6 +13,7 @@ use BradieTilley\Data\Data;
 class PhpTrait extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
+    use HasTypeDoc;
     use ResolvesTraitUses;
 
     /** @var list<PhpUseTrait> */
@@ -36,6 +38,7 @@ class PhpTrait extends Data implements ExportsPhp
         public array $methods = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
+        public ?string $description = null,
         public bool $strictTypes = true,
     ) {
         $this->traits = array_map(
@@ -67,7 +70,7 @@ class PhpTrait extends Data implements ExportsPhp
             $this->traits,
         );
 
-        $body = [];
+        $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
             $body[] = $attribute->toPhp($indent);

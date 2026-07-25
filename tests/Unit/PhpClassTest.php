@@ -181,6 +181,17 @@ test('multi-trait use supports insteadof and visibility aliases', function () {
     expect($class->toPhp())->toContain("use A, B {\n        A::boot insteadof B;\n        A::boot as private bootA;\n    }");
 });
 
+test('class description exports as type phpdoc', function () {
+    $class = new PhpClass(
+        namespace: 'App',
+        name: 'Post',
+        description: 'A blog post model',
+        strictTypes: false,
+    );
+
+    expect($class->toPhp())->toContain("/**\n * A blog post model\n */\nclass Post");
+});
+
 test('formatter callback is applied to full file export only', function () {
     PhpFormatter::using(fn (string $php): string => str_replace('Example', 'FORMATTED', $php));
 
