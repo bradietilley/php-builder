@@ -5,6 +5,8 @@ use BradieTilley\Builder\PhpEnumCase;
 use BradieTilley\Builder\PhpInterface;
 use BradieTilley\Builder\PhpMethod;
 use BradieTilley\Builder\PhpProperty;
+use BradieTilley\Builder\PhpPropertyGetHook;
+use BradieTilley\Builder\PhpPropertySetHook;
 use BradieTilley\Builder\PhpTrait;
 
 test('interface exports signature-only methods', function () {
@@ -30,6 +32,23 @@ interface WithSlug extends Identifiable
 }
 
 PHP);
+});
+
+test('interface exports hooked properties', function () {
+    $interface = new PhpInterface(
+        namespace: 'App\\Contracts',
+        name: 'HasName',
+        properties: [
+            new PhpProperty(
+                type: 'string',
+                name: 'name',
+                get: new PhpPropertyGetHook(stub: true),
+                set: new PhpPropertySetHook(stub: true),
+            ),
+        ],
+    );
+
+    expect($interface->toPhp())->toContain("public string \$name {\n        get;\n        set;\n    }");
 });
 
 test('trait exports properties and methods', function () {

@@ -18,6 +18,7 @@ class PhpInterface extends Data implements ExportsPhp
     /**
      * @param  list<string>|string  $extends
      * @param  list<PhpClassConstant>  $constants
+     * @param  list<PhpProperty>  $properties
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
      */
@@ -27,6 +28,8 @@ class PhpInterface extends Data implements ExportsPhp
         array|string $extends = [],
         #[ArrayOf(PhpClassConstant::class)]
         public array $constants = [],
+        #[ArrayOf(PhpProperty::class)]
+        public array $properties = [],
         #[ArrayOf(PhpMethod::class)]
         public array $methods = [],
         #[ArrayOf(PhpAttribute::class)]
@@ -79,6 +82,16 @@ class PhpInterface extends Data implements ExportsPhp
             }
 
             $sections[] = implode("\n\n", $constantLines);
+        }
+
+        if ($this->properties !== []) {
+            $propertyLines = [];
+
+            foreach ($this->properties as $property) {
+                $propertyLines[] = $property->toPhp($indent + 1);
+            }
+
+            $sections[] = implode("\n\n", $propertyLines);
         }
 
         if ($this->methods !== []) {
