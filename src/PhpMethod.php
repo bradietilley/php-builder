@@ -20,6 +20,7 @@ class PhpMethod extends Data implements ExportsPhp
     /**
      * @param  list<PhpArgument>  $args
      * @param  list<string>  $lines
+     * @param  list<string>  $throws  Exception type names for @throws tags
      * @param  list<PhpAttribute>  $attributes
      */
     public function __construct(
@@ -28,12 +29,15 @@ class PhpMethod extends Data implements ExportsPhp
         public bool $static = false,
         public bool $final = false,
         public bool $abstract = false,
+        public bool $returnsReference = false,
         #[ArrayOf(PhpArgument::class)]
         public array $args = [],
         PhpType|string|null $return = null,
         #[ArrayOf('string')]
         public array $lines = [],
         public ?string $description = null,
+        #[ArrayOf('string')]
+        public array $throws = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public bool $signatureOnly = false,
@@ -72,7 +76,8 @@ class PhpMethod extends Data implements ExportsPhp
 
         $signature[] = 'function';
         $argsPhp = $this->argumentsSignature($indent);
-        $signature[] = $this->name.$argsPhp['open'];
+        $functionName = ($this->returnsReference ? '&' : '').$this->name;
+        $signature[] = $functionName.$argsPhp['open'];
 
         $header = implode(' ', $signature);
 
@@ -195,6 +200,10 @@ class PhpMethod extends Data implements ExportsPhp
 
         if ($this->return !== null && $this->return->needsPhpDoc()) {
             $tags[] = '@return '.$this->return->toPhpDoc();
+        }
+
+        foreach ($this->throws as $throw) {
+            $tags[] = '@throws '.$throw;
         }
 
         if ($tags !== []) {
