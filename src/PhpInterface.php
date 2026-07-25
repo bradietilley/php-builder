@@ -37,6 +37,8 @@ class PhpInterface extends Data implements ExportsPhp
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public ?string $description = null,
+        /** @var list<PhpTemplate|string> */
+        public array $templates = [],
         public bool $strictTypes = true,
     ) {
         $this->extends = is_string($extends) ? [$extends] : $extends;

@@ -11,6 +11,10 @@ use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
+/**
+ * @phpstan-type TemplateList list<PhpTemplate|string>
+ */
+
 class PhpClass extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
@@ -31,6 +35,7 @@ class PhpClass extends Data implements ExportsPhp
      * @param  list<PhpProperty>  $properties
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<PhpTemplate|string>  $templates
      */
     public function __construct(
         public string $name,
@@ -47,6 +52,7 @@ class PhpClass extends Data implements ExportsPhp
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public ?string $description = null,
+        public array $templates = [],
         public bool $abstract = false,
         public bool $final = false,
         public bool $readonly = false,

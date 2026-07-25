@@ -2,8 +2,13 @@
 
 namespace BradieTilley\Builder\Concerns;
 
+use BradieTilley\Builder\PhpTemplate;
 use BradieTilley\Builder\Support\PhpDoc;
 
+/**
+ * @property string|null $description
+ * @property list<PhpTemplate|string> $templates
+ */
 trait HasTypeDoc
 {
     /**
@@ -14,19 +19,45 @@ trait HasTypeDoc
     {
         $lines = [];
 
-        if (($this->description ?? null) !== null && $this->description !== '') {
+        if ($this->description !== null && $this->description !== '') {
             $lines[] = $this->description;
         }
 
-        if ($extraTags !== []) {
+        $templateTags = $this->templateTags();
+
+        if ($templateTags !== [] || $extraTags !== []) {
             if ($lines !== []) {
                 $lines[] = '';
             }
 
-            array_push($lines, ...$extraTags);
+            array_push($lines, ...$templateTags, ...$extraTags);
         }
 
         return $lines;
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function templateTags(): array
+    {
+        if ($this->templates === []) {
+            return [];
+        }
+
+        $tags = [];
+
+        foreach ($this->templates as $template) {
+            if ($template instanceof PhpTemplate) {
+                $tags[] = $template->toTag();
+
+                continue;
+            }
+
+            $tags[] = '@template '.$template;
+        }
+
+        return $tags;
     }
 
     /**

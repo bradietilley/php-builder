@@ -39,6 +39,8 @@ class PhpTrait extends Data implements ExportsPhp
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public ?string $description = null,
+        /** @var list<PhpTemplate|string> */
+        public array $templates = [],
         public bool $strictTypes = true,
     ) {
         $this->traits = array_map(

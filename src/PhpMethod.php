@@ -38,6 +38,8 @@ class PhpMethod extends Data implements ExportsPhp
         public ?string $description = null,
         #[ArrayOf('string')]
         public array $throws = [],
+        /** @var list<PhpTemplate|string> */
+        public array $templates = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
         public bool $signatureOnly = false,
@@ -189,6 +191,12 @@ class PhpMethod extends Data implements ExportsPhp
         }
 
         $tags = [];
+
+        foreach ($this->templates as $template) {
+            $tags[] = $template instanceof PhpTemplate
+                ? $template->toTag()
+                : '@template '.$template;
+        }
 
         foreach ($this->args as $arg) {
             $param = $arg->phpDocParamLine();
