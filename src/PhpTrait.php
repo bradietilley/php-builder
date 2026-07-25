@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
+use BradieTilley\Builder\Concerns\ResolvesTraitUses;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
@@ -11,6 +12,7 @@ use BradieTilley\Data\Data;
 class PhpTrait extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
+    use ResolvesTraitUses;
 
     /** @var list<PhpUseTrait> */
     public array $traits = [];
@@ -47,7 +49,13 @@ class PhpTrait extends Data implements ExportsPhp
      */
     protected function structuralTypeNames(): array
     {
-        return array_map(fn (PhpUseTrait $trait): string => $trait->name, $this->traits);
+        $names = [];
+
+        foreach ($this->traits as $trait) {
+            array_push($names, ...$trait->allNames());
+        }
+
+        return $names;
     }
 
     public function toPhp(int $indent = 0): string
@@ -55,12 +63,7 @@ class PhpTrait extends Data implements ExportsPhp
         $this->reserveStructuralNames();
 
         $traits = array_map(
-            function (PhpUseTrait $trait): PhpUseTrait {
-                $resolved = clone $trait;
-                $resolved->name = $this->resolveTypeName($trait->name) ?? $trait->name;
-
-                return $resolved;
-            },
+            fn (PhpUseTrait $trait): PhpUseTrait => $this->resolveTraitUse($trait),
             $this->traits,
         );
 

@@ -7,6 +7,8 @@ use BradieTilley\Builder\PhpClassConstant;
 use BradieTilley\Builder\PhpFormatter;
 use BradieTilley\Builder\PhpMethod;
 use BradieTilley\Builder\PhpProperty;
+use BradieTilley\Builder\PhpTraitAlias;
+use BradieTilley\Builder\PhpTraitInsteadof;
 use BradieTilley\Builder\PhpUseTrait;
 use BradieTilley\Builder\Types\PhpArrayType;
 
@@ -147,6 +149,36 @@ test('trait aliases are exported', function () {
     );
 
     expect($class->toPhp())->toContain("use HasSlug {\n        bootHasSlug as bootSlug;\n    }");
+});
+
+test('multi-trait use supports insteadof and visibility aliases', function () {
+    $class = new PhpClass(
+        namespace: 'App',
+        name: 'Example',
+        traits: [
+            new PhpUseTrait(
+                name: ['App\\A', 'App\\B'],
+                aliases: [
+                    new PhpTraitAlias(
+                        method: 'boot',
+                        alias: 'bootA',
+                        visibility: PhpTraitAlias::VISIBILITY_PRIVATE,
+                        trait: 'App\\A',
+                    ),
+                ],
+                insteadof: [
+                    new PhpTraitInsteadof(
+                        method: 'boot',
+                        from: 'App\\A',
+                        insteadOf: 'App\\B',
+                    ),
+                ],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    expect($class->toPhp())->toContain("use A, B {\n        A::boot insteadof B;\n        A::boot as private bootA;\n    }");
 });
 
 test('formatter callback is applied to full file export only', function () {

@@ -4,6 +4,7 @@ namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Concerns\ExportsPhpFile;
 use BradieTilley\Builder\Concerns\HasVisibility;
+use BradieTilley\Builder\Concerns\ResolvesTraitUses;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
@@ -13,6 +14,7 @@ class PhpClass extends Data implements ExportsPhp
 {
     use ExportsPhpFile;
     use HasVisibility;
+    use ResolvesTraitUses;
 
     /** @var list<string> */
     public array $implements = [];
@@ -70,7 +72,7 @@ class PhpClass extends Data implements ExportsPhp
         }
 
         foreach ($this->traits as $trait) {
-            $names[] = $trait->name;
+            array_push($names, ...$trait->allNames());
         }
 
         return $names;
@@ -86,12 +88,7 @@ class PhpClass extends Data implements ExportsPhp
             $this->implements,
         )));
         $traits = array_map(
-            function (PhpUseTrait $trait): PhpUseTrait {
-                $resolved = clone $trait;
-                $resolved->name = $this->resolveTypeName($trait->name) ?? $trait->name;
-
-                return $resolved;
-            },
+            fn (PhpUseTrait $trait): PhpUseTrait => $this->resolveTraitUse($trait),
             $this->traits,
         );
 
