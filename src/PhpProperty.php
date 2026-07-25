@@ -28,6 +28,8 @@ class PhpProperty extends Data implements ExportsPhp
         public ?string $setVisibility = null,
         public bool $static = false,
         public bool $readonly = false,
+        public bool $abstract = false,
+        public bool $final = false,
         public ?string $defaultValue = null,
         public ?string $description = null,
         public ?PhpPropertyGetHook $get = null,
@@ -44,6 +46,18 @@ class PhpProperty extends Data implements ExportsPhp
             throw new InvalidPhpDefinitionException('Property hooks are incompatible with readonly properties.');
         }
 
+        if ($this->abstract && $this->final) {
+            throw new InvalidPhpDefinitionException('Properties cannot be both abstract and final.');
+        }
+
+        if ($this->abstract && $this->get === null && $this->set === null) {
+            throw new InvalidPhpDefinitionException('Abstract properties must declare at least one hook.');
+        }
+
+        if ($this->abstract && $this->defaultValue !== null) {
+            throw new InvalidPhpDefinitionException('Abstract properties cannot have a default value.');
+        }
+
         $prefix = Indent::of($indent);
         $lines = [];
 
@@ -55,7 +69,17 @@ class PhpProperty extends Data implements ExportsPhp
             $lines[] = $attribute->toPhp($indent);
         }
 
-        $signature = $this->visibilitySignature();
+        $signature = [];
+
+        if ($this->abstract) {
+            $signature[] = 'abstract';
+        }
+
+        if ($this->final) {
+            $signature[] = 'final';
+        }
+
+        array_push($signature, ...$this->visibilitySignature());
 
         if ($this->static) {
             $signature[] = 'static';
@@ -129,7 +153,6 @@ class PhpProperty extends Data implements ExportsPhp
             return [$this->visibility];
         }
 
-        // public private(set) / protected private(set) / public protected(set)
         return [$this->visibility, $this->setVisibility.'(set)'];
     }
 }
