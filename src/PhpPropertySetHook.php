@@ -37,31 +37,31 @@ class PhpPropertySetHook extends Data implements ExportsPhp
                 throw new InvalidPhpDefinitionException('Stub set hooks cannot have a type, expression, or body lines.');
             }
 
-            return $prefix.'set;';
+            return $prefix . 'set;';
         }
 
         if ($this->type === null) {
             throw new InvalidPhpDefinitionException('Set hooks require a parameter type unless they are stubs.');
         }
 
-        $param = $this->type->toPhp().' $'.$this->name;
+        $param = $this->type->toPhp() . ' $' . $this->name;
 
         if ($this->expression !== null) {
             if ($this->lines !== []) {
                 throw new InvalidPhpDefinitionException('Expression set hooks cannot also have body lines.');
             }
 
-            return $prefix.'set('.$param.') => '.$this->expression.';';
+            return $prefix . 'set(' . $param . ') => ' . $this->expression . ';';
         }
 
         $bodyPrefix = Indent::of($indent + 1);
-        $out = [$prefix.'set('.$param.') {'];
+        $out = [$prefix . 'set(' . $param . ') {'];
 
         foreach ($this->lines as $line) {
-            $out[] = $line === '' ? '' : $bodyPrefix.$line;
+            $out[] = $line === '' ? '' : $bodyPrefix . $line;
         }
 
-        $out[] = $prefix.'}';
+        $out[] = $prefix . '}';
 
         return implode("\n", $out);
     }

@@ -29,13 +29,13 @@ class PhpEnumCase extends Data implements ExportsPhp
             $lines[] = $attribute->toPhp($indent);
         }
 
-        $line = 'case '.$this->name;
+        $line = 'case ' . $this->name;
 
         if ($this->value !== null) {
-            $line .= ' = '.$this->value;
+            $line .= ' = ' . $this->value;
         }
 
-        $lines[] = $prefix.$line.';';
+        $lines[] = $prefix . $line . ';';
 
         return implode("\n", $lines);
     }

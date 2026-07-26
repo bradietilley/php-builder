@@ -73,18 +73,18 @@ class PhpEnum extends Data implements ExportsPhp
             $body[] = $attribute->toPhp($indent);
         }
 
-        $signature = 'enum '.$this->name;
+        $signature = 'enum ' . $this->name;
 
         if ($this->backedType !== null) {
-            $signature .= ': '.$this->backedType->toPhp();
+            $signature .= ': ' . $this->backedType->toPhp();
         }
 
         if ($implements !== []) {
-            $signature .= ' implements '.implode(', ', $implements);
+            $signature .= ' implements ' . implode(', ', $implements);
         }
 
-        $body[] = Indent::of($indent).$signature;
-        $body[] = Indent::of($indent).'{';
+        $body[] = Indent::of($indent) . $signature;
+        $body[] = Indent::of($indent) . '{';
 
         $sections = [];
 
@@ -122,7 +122,7 @@ class PhpEnum extends Data implements ExportsPhp
             $body[] = implode("\n\n", $sections);
         }
 
-        $body[] = Indent::of($indent).'}';
+        $body[] = Indent::of($indent) . '}';
 
         if ($indent > 0) {
             return implode("\n", $body);

@@ -78,51 +78,51 @@ class PhpMethod extends Data implements ExportsPhp
 
         $signature[] = 'function';
         $argsPhp = $this->argumentsSignature($indent);
-        $functionName = ($this->returnsReference ? '&' : '').$this->name;
-        $signature[] = $functionName.$argsPhp['open'];
+        $functionName = ($this->returnsReference ? '&' : '') . $this->name;
+        $signature[] = $functionName . $argsPhp['open'];
 
         $header = implode(' ', $signature);
 
         if ($argsPhp['multiline']) {
-            $out[] = $prefix.$header;
+            $out[] = $prefix . $header;
 
             foreach ($argsPhp['lines'] as $argLine) {
                 $out[] = $argLine;
             }
 
-            $close = $prefix.')';
+            $close = $prefix . ')';
 
             if ($this->return !== null) {
-                $close .= ': '.$this->return->toPhp();
+                $close .= ': ' . $this->return->toPhp();
             }
 
             if ($this->abstract || $this->signatureOnly) {
-                $out[] = $close.';';
+                $out[] = $close . ';';
 
                 return implode("\n", $out);
             }
 
-            $out[] = $close.' {';
+            $out[] = $close . ' {';
         } else {
             if ($this->return !== null) {
-                $header .= ': '.$this->return->toPhp();
+                $header .= ': ' . $this->return->toPhp();
             }
 
             if ($this->abstract || $this->signatureOnly) {
-                $out[] = $prefix.$header.';';
+                $out[] = $prefix . $header . ';';
 
                 return implode("\n", $out);
             }
 
-            $out[] = $prefix.$header;
-            $out[] = $prefix.'{';
+            $out[] = $prefix . $header;
+            $out[] = $prefix . '{';
         }
 
         foreach ($this->lines as $line) {
-            $out[] = $line === '' ? '' : Indent::of($indent + 1).$line;
+            $out[] = $line === '' ? '' : Indent::of($indent + 1) . $line;
         }
 
-        $out[] = $prefix.'}';
+        $out[] = $prefix . '}';
 
         return implode("\n", $out);
     }
@@ -153,7 +153,7 @@ class PhpMethod extends Data implements ExportsPhp
 
         if (! $multiline) {
             return [
-                'open' => '('.implode(', ', $rendered).')',
+                'open' => '(' . implode(', ', $rendered) . ')',
                 'multiline' => false,
                 'lines' => [],
             ];
@@ -168,7 +168,7 @@ class PhpMethod extends Data implements ExportsPhp
             $argLines[array_key_last($argLines)] .= $suffix;
 
             foreach ($argLines as $i => $argLine) {
-                $lines[] = ($i === 0 ? $argIndent : $argIndent).$argLine;
+                $lines[] = ($i === 0 ? $argIndent : $argIndent) . $argLine;
             }
         }
 
@@ -195,7 +195,7 @@ class PhpMethod extends Data implements ExportsPhp
         foreach ($this->templates as $template) {
             $tags[] = $template instanceof PhpTemplate
                 ? $template->toTag()
-                : '@template '.$template;
+                : '@template ' . $template;
         }
 
         foreach ($this->args as $arg) {
@@ -207,11 +207,11 @@ class PhpMethod extends Data implements ExportsPhp
         }
 
         if ($this->return !== null && $this->return->needsPhpDoc()) {
-            $tags[] = '@return '.$this->return->toPhpDoc();
+            $tags[] = '@return ' . $this->return->toPhpDoc();
         }
 
         foreach ($this->throws as $throw) {
-            $tags[] = '@throws '.$throw;
+            $tags[] = '@throws ' . $throw;
         }
 
         if ($tags !== []) {

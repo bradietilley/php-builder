@@ -53,9 +53,9 @@ class PhpClassConstant extends Data implements ExportsPhp
             $parts[] = $this->type->toPhp();
         }
 
-        $parts[] = $this->name.' = '.$this->value.';';
+        $parts[] = $this->name . ' = ' . $this->value . ';';
 
-        $lines[] = $prefix.implode(' ', $parts);
+        $lines[] = $prefix . implode(' ', $parts);
 
         return implode("\n", $lines);
     }

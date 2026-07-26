@@ -24,10 +24,10 @@ class PhpTemplate extends Data
             $tag .= ' contravariant';
         }
 
-        $tag .= ' '.$this->name;
+        $tag .= ' ' . $this->name;
 
         if ($this->of !== null) {
-            $tag .= ' of '.$this->of;
+            $tag .= ' of ' . $this->of;
         }
 
         return $tag;

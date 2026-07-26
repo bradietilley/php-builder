@@ -103,7 +103,7 @@ class ImportBag
             return false;
         }
 
-        $prefix = $this->namespace.'\\';
+        $prefix = $this->namespace . '\\';
 
         if (! str_starts_with($fqcn, $prefix)) {
             return false;
@@ -135,11 +135,11 @@ class ImportBag
 
         $suffix = 2;
 
-        while (isset($this->usedNames[$alias.$suffix])) {
+        while (isset($this->usedNames[$alias . $suffix])) {
             $suffix++;
         }
 
-        return $alias.$suffix;
+        return $alias . $suffix;
     }
 
     /**

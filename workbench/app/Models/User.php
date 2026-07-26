@@ -40,6 +40,6 @@ class User extends AuthUser
 
     public function getUrlAttribute(): string
     {
-        return '/users/'.($this->id ?? 0);
+        return '/users/' . ($this->id ?? 0);
     }
 }

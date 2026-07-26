@@ -54,7 +54,7 @@ trait HasTypeDoc
                 continue;
             }
 
-            $tags[] = '@template '.$template;
+            $tags[] = '@template ' . $template;
         }
 
         return $tags;

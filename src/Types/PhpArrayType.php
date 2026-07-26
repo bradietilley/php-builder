@@ -39,11 +39,11 @@ class PhpArrayType extends Data implements PhpType
     public function toPhpDoc(): string
     {
         $inner = $this->key !== null
-            ? $this->key->toPhpDoc().', '.$this->value->toPhpDoc()
+            ? $this->key->toPhpDoc() . ', ' . $this->value->toPhpDoc()
             : $this->value->toPhpDoc();
 
-        $doc = 'array<'.$inner.'>';
+        $doc = 'array<' . $inner . '>';
 
-        return $this->nullable ? $doc.'|null' : $doc;
+        return $this->nullable ? $doc . '|null' : $doc;
     }
 }

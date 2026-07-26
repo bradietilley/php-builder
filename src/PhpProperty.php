@@ -93,21 +93,21 @@ class PhpProperty extends Data implements ExportsPhp
             $signature[] = $this->type->toPhp();
         }
 
-        $signature[] = '$'.$this->name;
+        $signature[] = '$' . $this->name;
 
         $header = implode(' ', $signature);
 
         if ($this->defaultValue !== null && $this->get === null && $this->set === null) {
-            $header .= ' = '.$this->defaultValue;
+            $header .= ' = ' . $this->defaultValue;
         }
 
         if ($this->get === null && $this->set === null) {
-            $lines[] = $prefix.$header.';';
+            $lines[] = $prefix . $header . ';';
 
             return implode("\n", $lines);
         }
 
-        $lines[] = $prefix.$header.' {';
+        $lines[] = $prefix . $header . ' {';
 
         if ($this->get !== null) {
             $lines[] = $this->get->toPhp($indent + 1);
@@ -117,7 +117,7 @@ class PhpProperty extends Data implements ExportsPhp
             $lines[] = $this->set->toPhp($indent + 1);
         }
 
-        $lines[] = $prefix.'}';
+        $lines[] = $prefix . '}';
 
         return implode("\n", $lines);
     }
@@ -138,7 +138,7 @@ class PhpProperty extends Data implements ExportsPhp
                 $lines[] = '';
             }
 
-            $lines[] = '@var '.$this->type->toPhpDoc().' $'.$this->name;
+            $lines[] = '@var ' . $this->type->toPhpDoc() . ' $' . $this->name;
         }
 
         return $lines;
@@ -153,6 +153,6 @@ class PhpProperty extends Data implements ExportsPhp
             return [$this->visibility];
         }
 
-        return [$this->visibility, $this->setVisibility.'(set)'];
+        return [$this->visibility, $this->setVisibility . '(set)'];
     }
 }

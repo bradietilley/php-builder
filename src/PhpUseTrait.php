@@ -46,10 +46,10 @@ class PhpUseTrait extends Data implements ExportsPhp
         $list = implode(', ', $this->names);
 
         if ($this->aliases === [] && $this->insteadof === []) {
-            return $prefix.'use '.$list.';';
+            return $prefix . 'use ' . $list . ';';
         }
 
-        $lines = [$prefix.'use '.$list.' {'];
+        $lines = [$prefix . 'use ' . $list . ' {'];
 
         foreach ($this->insteadof as $adaptation) {
             $lines[] = $adaptation->toPhp($indent + 1);
@@ -59,7 +59,7 @@ class PhpUseTrait extends Data implements ExportsPhp
             $lines[] = $alias->toPhp($indent + 1);
         }
 
-        $lines[] = $prefix.'}';
+        $lines[] = $prefix . '}';
 
         return implode("\n", $lines);
     }

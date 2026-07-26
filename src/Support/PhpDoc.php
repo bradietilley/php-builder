@@ -15,13 +15,13 @@ class PhpDoc
         }
 
         $prefix = Indent::of($indent);
-        $out = [$prefix.'/**'];
+        $out = [$prefix . '/**'];
 
         foreach ($lines as $line) {
-            $out[] = $line === '' ? $prefix.' *' : $prefix.' * '.$line;
+            $out[] = $line === '' ? $prefix . ' *' : $prefix . ' * ' . $line;
         }
 
-        $out[] = $prefix.' */';
+        $out[] = $prefix . ' */';
 
         return $out;
     }

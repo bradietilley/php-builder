@@ -17,7 +17,7 @@ abstract class TestCase extends TestbenchTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/../workbench/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../workbench/database/migrations');
     }
 
     public function getEnvironmentSetUp($app)

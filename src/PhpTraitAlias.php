@@ -22,15 +22,15 @@ class PhpTraitAlias extends Data implements ExportsPhp
     public function toPhp(int $indent = 0): string
     {
         $left = $this->trait !== null
-            ? $this->trait.'::'.$this->method
+            ? $this->trait . '::' . $this->method
             : $this->method;
 
-        $right = trim(($this->visibility ?? '').' '.($this->alias ?? ''));
+        $right = trim(($this->visibility ?? '') . ' ' . ($this->alias ?? ''));
 
         if ($right === '') {
             $right = $this->method;
         }
 
-        return Indent::of($indent).$left.' as '.$right.';';
+        return Indent::of($indent) . $left . ' as ' . $right . ';';
     }
 }

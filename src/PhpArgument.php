@@ -84,17 +84,17 @@ class PhpArgument extends Data implements ExportsPhp
             $signature[] = $this->type->toPhp();
         }
 
-        $name = ($this->byRef ? '&' : '').($this->variadic ? '...' : '').'$'.$this->name;
+        $name = ($this->byRef ? '&' : '') . ($this->variadic ? '...' : '') . '$' . $this->name;
         $signature[] = $name;
 
         if ($this->defaultValue !== null && ! $this->variadic && $this->get === null && $this->set === null) {
-            $signature[array_key_last($signature)] .= ' = '.$this->defaultValue;
+            $signature[array_key_last($signature)] .= ' = ' . $this->defaultValue;
         }
 
         $header = implode(' ', $signature);
 
         if ($this->get !== null || $this->set !== null) {
-            $parts[] = $header.' {';
+            $parts[] = $header . ' {';
 
             if ($this->get !== null) {
                 $parts[] = $this->get->toPhp(1);
@@ -124,13 +124,13 @@ class PhpArgument extends Data implements ExportsPhp
 
             $type = $this->type?->toPhpDoc() ?? 'mixed';
 
-            return '@param '.$type.' $'.$this->name.' '.$this->description;
+            return '@param ' . $type . ' $' . $this->name . ' ' . $this->description;
         }
 
-        $line = '@param '.$this->type->toPhpDoc().' $'.$this->name;
+        $line = '@param ' . $this->type->toPhpDoc() . ' $' . $this->name;
 
         if ($this->description !== null) {
-            $line .= ' '.$this->description;
+            $line .= ' ' . $this->description;
         }
 
         return $line;
@@ -147,7 +147,7 @@ class PhpArgument extends Data implements ExportsPhp
             return [$visibility];
         }
 
-        return [$visibility, $this->setVisibility.'(set)'];
+        return [$visibility, $this->setVisibility . '(set)'];
     }
 
     protected function indentMultiline(string $line, int $indent): string
@@ -158,6 +158,6 @@ class PhpArgument extends Data implements ExportsPhp
             return $line;
         }
 
-        return $prefix.str_replace("\n", "\n".$prefix, $line);
+        return $prefix . str_replace("\n", "\n" . $prefix, $line);
     }
 }

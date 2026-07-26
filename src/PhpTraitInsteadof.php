@@ -17,6 +17,6 @@ class PhpTraitInsteadof extends Data implements ExportsPhp
 
     public function toPhp(int $indent = 0): string
     {
-        return Indent::of($indent).$this->from.'::'.$this->method.' insteadof '.$this->insteadOf.';';
+        return Indent::of($indent) . $this->from . '::' . $this->method . ' insteadof ' . $this->insteadOf . ';';
     }
 }

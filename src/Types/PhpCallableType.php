@@ -43,7 +43,7 @@ class PhpCallableType extends Data implements PhpType
     {
         $name = $this->useClosure ? 'Closure' : 'callable';
 
-        return $this->nullable ? '?'.$name : $name;
+        return $this->nullable ? '?' . $name : $name;
     }
 
     public function toPhpDoc(): string
@@ -57,12 +57,12 @@ class PhpCallableType extends Data implements PhpType
             $this->parameters,
         ));
 
-        $doc = 'callable('.$params.')';
+        $doc = 'callable(' . $params . ')';
 
         if ($this->return !== null) {
-            $doc .= ': '.$this->return->toPhpDoc();
+            $doc .= ': ' . $this->return->toPhpDoc();
         }
 
-        return $this->nullable ? $doc.'|null' : $doc;
+        return $this->nullable ? $doc . '|null' : $doc;
     }
 }

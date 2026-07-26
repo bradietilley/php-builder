@@ -23,8 +23,8 @@ class PhpAttribute extends Data implements ExportsPhp
     {
         $args = $this->arguments === []
             ? ''
-            : '('.implode(', ', $this->arguments).')';
+            : '(' . implode(', ', $this->arguments) . ')';
 
-        return Indent::of($indent).'#['.$this->name.$args.']';
+        return Indent::of($indent) . '#[' . $this->name . $args . ']';
     }
 }

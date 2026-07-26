@@ -103,8 +103,8 @@ class PhpClass extends Data implements ExportsPhp
             $body[] = $attribute->toPhp($indent);
         }
 
-        $body[] = Indent::of($indent).$this->classSignature($extends, $implements);
-        $body[] = Indent::of($indent).'{';
+        $body[] = Indent::of($indent) . $this->classSignature($extends, $implements);
+        $body[] = Indent::of($indent) . '{';
 
         $sections = [];
 
@@ -152,7 +152,7 @@ class PhpClass extends Data implements ExportsPhp
             $body[] = implode("\n\n", $sections);
         }
 
-        $body[] = Indent::of($indent).'}';
+        $body[] = Indent::of($indent) . '}';
 
         if ($indent > 0) {
             return implode("\n", $body);

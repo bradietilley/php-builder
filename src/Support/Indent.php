@@ -20,7 +20,7 @@ class Indent
         $prefix = self::of($level);
 
         return array_map(
-            fn (string $line): string => $line === '' ? '' : $prefix.$line,
+            fn (string $line): string => $line === '' ? '' : $prefix . $line,
             $lines,
         );
     }

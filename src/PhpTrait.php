@@ -78,8 +78,8 @@ class PhpTrait extends Data implements ExportsPhp
             $body[] = $attribute->toPhp($indent);
         }
 
-        $body[] = Indent::of($indent).'trait '.$this->name;
-        $body[] = Indent::of($indent).'{';
+        $body[] = Indent::of($indent) . 'trait ' . $this->name;
+        $body[] = Indent::of($indent) . '{';
 
         $sections = [];
 
@@ -127,7 +127,7 @@ class PhpTrait extends Data implements ExportsPhp
             $body[] = implode("\n\n", $sections);
         }
 
-        $body[] = Indent::of($indent).'}';
+        $body[] = Indent::of($indent) . '}';
 
         if ($indent > 0) {
             return implode("\n", $body);

@@ -74,8 +74,8 @@ class PhpInterface extends Data implements ExportsPhp
             $signature[] = implode(', ', $extends);
         }
 
-        $body[] = Indent::of($indent).implode(' ', $signature);
-        $body[] = Indent::of($indent).'{';
+        $body[] = Indent::of($indent) . implode(' ', $signature);
+        $body[] = Indent::of($indent) . '{';
 
         $sections = [];
 
@@ -116,7 +116,7 @@ class PhpInterface extends Data implements ExportsPhp
             $body[] = implode("\n\n", $sections);
         }
 
-        $body[] = Indent::of($indent).'}';
+        $body[] = Indent::of($indent) . '}';
 
         if ($indent > 0) {
             return implode("\n", $body);

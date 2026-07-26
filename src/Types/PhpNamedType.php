@@ -34,7 +34,7 @@ class PhpNamedType extends Data implements PhpType
         $name = $this->name;
 
         if ($this->nullable && $name !== 'mixed' && ! str_starts_with($name, '?')) {
-            return '?'.$name;
+            return '?' . $name;
         }
 
         return $name;
@@ -43,7 +43,7 @@ class PhpNamedType extends Data implements PhpType
     public function toPhpDoc(): string
     {
         if ($this->nullable && $this->name !== 'mixed' && ! str_contains($this->name, '|')) {
-            return $this->name.'|null';
+            return $this->name . '|null';
         }
 
         return $this->name;

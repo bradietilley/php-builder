@@ -58,7 +58,7 @@ trait ExportsPhpFile
         }
 
         if ($this->namespace !== '') {
-            $lines[] = 'namespace '.$this->namespace.';';
+            $lines[] = 'namespace ' . $this->namespace . ';';
             $lines[] = '';
         }
 
