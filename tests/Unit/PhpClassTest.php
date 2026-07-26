@@ -258,6 +258,22 @@ test('trait aliases are exported', function () {
     expect($class->toPhp())->toContain("use HasSlug {\n        bootHasSlug as bootSlug;\n    }");
 });
 
+test('trait use docs render above the use statement', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'Post',
+        traits: [
+            new PhpUseTrait(
+                name: 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+                docs: ['@use HasFactory<\\Database\\Factories\\PostFactory>'],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    expect($class->toPhp())
+        ->toContain("    /** @use HasFactory<\\Database\\Factories\\PostFactory> */\n    use HasFactory;");
+});
 test('multi-trait use supports insteadof and visibility aliases', function () {
     $class = new PhpClass(
         namespace: 'App',

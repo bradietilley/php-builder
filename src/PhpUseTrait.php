@@ -4,6 +4,7 @@ namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Support\Indent;
+use BradieTilley\Builder\Support\PhpDoc;
 use BradieTilley\Data\Data;
 
 class PhpUseTrait extends Data implements ExportsPhp
@@ -21,11 +22,13 @@ class PhpUseTrait extends Data implements ExportsPhp
      * @param  string|list<string>  $name  One or more trait names for a shared use block
      * @param  array<string, string>|list<PhpTraitAlias>  $aliases
      * @param  array<string, string>|list<PhpTraitInsteadof>  $insteadof
+     * @param  list<string>  $docs  Docblock lines rendered above the `use` statement
      */
     public function __construct(
         string|array $name,
         array $aliases = [],
         array $insteadof = [],
+        public array $docs = [],
     ) {
         $this->names = is_string($name) ? [$name] : $name;
         $this->aliases = $this->normalizeAliases($aliases);
@@ -44,13 +47,19 @@ class PhpUseTrait extends Data implements ExportsPhp
     {
         $prefix = Indent::of($indent);
         $list = implode(', ', $this->names);
+        $lines = match (true) {
+            $this->docs === [] => [],
+            count($this->docs) === 1 => [$prefix . '/** ' . $this->docs[0] . ' */'],
+            default => PhpDoc::render($this->docs, $indent),
+        };
 
         if ($this->aliases === [] && $this->insteadof === []) {
-            return $prefix . 'use ' . $list . ';';
+            $lines[] = $prefix . 'use ' . $list . ';';
+
+            return implode("\n", $lines);
         }
 
-        $lines = [$prefix . 'use ' . $list . ' {'];
-
+        $lines[] = $prefix . 'use ' . $list . ' {';
         foreach ($this->insteadof as $adaptation) {
             $lines[] = $adaptation->toPhp($indent + 1);
         }
