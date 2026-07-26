@@ -6,12 +6,14 @@ use BradieTilley\Builder\Concerns\HasVisibility;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Contracts\PhpType;
 use BradieTilley\Builder\Contracts\ResolvesTypeImports;
+use BradieTilley\Builder\Support\ClosureSource;
 use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Builder\Support\PhpDoc;
 use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
+use Closure;
 
 class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
 {
@@ -24,6 +26,7 @@ class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
      * @param  list<string>  $lines
      * @param  list<string>  $throws  Exception type names for @throws tags
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<string>  $docs  Extra method docblock lines
      */
     public function __construct(
         public string $name,
@@ -44,9 +47,53 @@ class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
         public array $templates = [],
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
         public bool $signatureOnly = false,
     ) {
         $this->return = TypeFactory::make($return);
+    }
+
+    /**
+     * Build a method by inlining a closure's signature and body from source.
+     *
+     * Closures with `use (...)` bindings are rejected. Arrow functions become a
+     * single `return …;` body. Prefer this at generate-time so emitted PHP is
+     * self-contained (no runtime registry).
+     *
+     * @param  list<string>  $throws
+     * @param  list<PhpAttribute>  $attributes
+     * @param  list<PhpTemplate|string>  $templates
+     * @param  list<string>  $docs
+     */
+    public static function fromClosure(
+        Closure $closure,
+        string $name,
+        PhpVisibility $visibility = PhpVisibility::Public,
+        bool $final = false,
+        ?string $description = null,
+        array $throws = [],
+        array $attributes = [],
+        array $templates = [],
+        array $docs = [],
+    ): self {
+        $extracted = ClosureSource::extract($closure);
+
+        return new self(
+            name: $name,
+            visibility: $visibility,
+            static: $extracted['static'],
+            final: $final,
+            returnsReference: $extracted['returnsReference'],
+            args: $extracted['args'],
+            return: $extracted['return'],
+            lines: $extracted['lines'],
+            description: $description,
+            throws: $throws,
+            templates: $templates,
+            attributes: $attributes,
+            docs: $docs,
+        );
     }
 
     public function withResolvedImports(ImportBag $imports): static
@@ -241,6 +288,8 @@ class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
         foreach ($this->throws as $throw) {
             $tags[] = '@throws ' . $throw;
         }
+
+        array_push($tags, ...$this->docs);
 
         if ($tags !== []) {
             if ($lines !== []) {

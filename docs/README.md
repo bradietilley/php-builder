@@ -44,6 +44,7 @@ echo $class->toPhp();
 - [Traits](traits/README.md)
 - [Enums](enums/README.md)
 - [Methods & Arguments](methods/README.md)
+- [Closures](closures/README.md)
 - [Properties & Hooks](properties/README.md)
 - [Types](types/README.md)
 - [Imports & Aliasing](imports/README.md)

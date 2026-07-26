@@ -19,7 +19,8 @@
     ],
     "require": {
         "php": "~8.5.0",
-        "bradietilley/php-data": "*"
+        "bradietilley/php-data": "*",
+        "nikic/php-parser": "^5.0"
     },
     "require-dev": {
         "laravel/framework": "^13.0",

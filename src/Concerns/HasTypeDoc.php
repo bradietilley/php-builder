@@ -8,6 +8,7 @@ use BradieTilley\Builder\Support\PhpDoc;
 /**
  * @property string|null $description
  * @property list<PhpTemplate|string> $templates
+ * @property list<string> $docs  Extra docblock lines (e.g. `@property string $title`)
  */
 trait HasTypeDoc
 {
@@ -24,13 +25,14 @@ trait HasTypeDoc
         }
 
         $templateTags = $this->templateTags();
+        $tags = [...$templateTags, ...$this->docs, ...$extraTags];
 
-        if ($templateTags !== [] || $extraTags !== []) {
+        if ($tags !== []) {
             if ($lines !== []) {
                 $lines[] = '';
             }
 
-            array_push($lines, ...$templateTags, ...$extraTags);
+            array_push($lines, ...$tags);
         }
 
         return $lines;

@@ -22,6 +22,7 @@ class PhpProperty extends Data implements ExportsPhp, ResolvesTypeImports
 
     /**
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<string>  $docs  Extra property docblock lines
      */
     public function __construct(
         public string $name,
@@ -38,6 +39,8 @@ class PhpProperty extends Data implements ExportsPhp, ResolvesTypeImports
         public ?PhpPropertySetHook $set = null,
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
     ) {
         $this->type = TypeFactory::make($type);
     }
@@ -148,12 +151,20 @@ class PhpProperty extends Data implements ExportsPhp, ResolvesTypeImports
             $lines[] = $this->description;
         }
 
+        $tags = [];
+
         if ($this->type !== null && $this->type->needsPhpDoc()) {
+            $tags[] = '@var ' . $this->type->toPhpDoc() . ' $' . $this->name;
+        }
+
+        array_push($tags, ...$this->docs);
+
+        if ($tags !== []) {
             if ($lines !== []) {
                 $lines[] = '';
             }
 
-            $lines[] = '@var ' . $this->type->toPhpDoc() . ' $' . $this->name;
+            array_push($lines, ...$tags);
         }
 
         return $lines;

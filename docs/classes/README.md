@@ -43,6 +43,7 @@ echo $class->toPhp();
 | `attributes` | `list<PhpAttribute>` | `[]` | Class-level attributes |
 | `description` | `?string` | `null` | Class docblock summary |
 | `templates` | `list<PhpTemplate\|string>` | `[]` | `@template` tags on the class docblock |
+| `docs` | `list<string>` | `[]` | Extra docblock lines (e.g. `@property string $title`) |
 | `abstract` | `bool` | `false` | Mutually exclusive with `final` in practice (`abstract` wins in the signature) |
 | `final` | `bool` | `false` | Emitted when not abstract |
 | `readonly` | `bool` | `false` | `readonly class` |
@@ -87,6 +88,29 @@ new PhpClass(
     ],
 );
 ```
+
+## Custom docblock lines
+
+Pass raw docblock lines (without the leading `*`) via `docs`. They are rendered
+after `description` and `@template` tags — ideal for Eloquent `@property` /
+`@property-read` annotations:
+
+```php
+new PhpClass(
+    name: 'Post',
+    namespace: 'App\\Models',
+    extends: 'Illuminate\\Database\\Eloquent\\Model',
+    description: 'A blog post',
+    docs: [
+        '@property int $id',
+        '@property string $title',
+        '@property-read \\App\\Models\\User $author',
+    ],
+);
+```
+
+`docs` is also available on `PhpInterface`, `PhpTrait`, `PhpEnum`, `PhpMethod`,
+and `PhpProperty`. Empty-string entries become blank ` *` lines.
 
 ## Mutating after construction
 

@@ -14,6 +14,7 @@ This package line requires PHP 8.5. Emitters always produce PHP 8.5 syntax
 | Package | Role |
 | --- | --- |
 | [`bradietilley/php-data`](https://bradietilley.dev/php-data) | Builder objects extend `Data` for typed construction |
+| [`nikic/php-parser`](https://github.com/nikic/PHP-Parser) | Used by `PhpMethod::fromClosure()` to extract closure bodies |
 
 Laravel is **not** required at runtime.
 

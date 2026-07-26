@@ -32,6 +32,7 @@ class PhpClass extends Data implements ExportsPhp
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
      * @param  list<PhpTemplate|string>  $templates
+     * @param  list<string>  $docs  Extra class docblock lines (e.g. `@property string $title`)
      */
     public function __construct(
         public string $name,
@@ -49,6 +50,8 @@ class PhpClass extends Data implements ExportsPhp
         public array $attributes = [],
         public ?string $description = null,
         public array $templates = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
         public bool $abstract = false,
         public bool $final = false,
         public bool $readonly = false,

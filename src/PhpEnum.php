@@ -28,6 +28,7 @@ class PhpEnum extends Data implements ExportsPhp
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
      * @param  list<PhpTemplate|string>  $templates
+     * @param  list<string>  $docs  Extra enum docblock lines
      */
     public function __construct(
         public string $name,
@@ -44,6 +45,8 @@ class PhpEnum extends Data implements ExportsPhp
         public array $attributes = [],
         public ?string $description = null,
         public array $templates = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
         public bool $strictTypes = true,
     ) {
         $this->backedType = TypeFactory::make($backedType);

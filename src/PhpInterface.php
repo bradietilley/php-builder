@@ -23,6 +23,7 @@ class PhpInterface extends Data implements ExportsPhp
      * @param  list<PhpProperty>  $properties
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<string>  $docs  Extra interface docblock lines
      */
     public function __construct(
         public string $name,
@@ -39,6 +40,8 @@ class PhpInterface extends Data implements ExportsPhp
         public ?string $description = null,
         /** @var list<PhpTemplate|string> */
         public array $templates = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
         public bool $strictTypes = true,
     ) {
         $this->extends = is_string($extends) ? [$extends] : $extends;

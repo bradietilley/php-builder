@@ -25,6 +25,7 @@ class PhpTrait extends Data implements ExportsPhp
      * @param  list<PhpProperty>  $properties
      * @param  list<PhpMethod>  $methods
      * @param  list<PhpAttribute>  $attributes
+     * @param  list<string>  $docs  Extra trait docblock lines
      */
     public function __construct(
         public string $name,
@@ -41,6 +42,8 @@ class PhpTrait extends Data implements ExportsPhp
         public ?string $description = null,
         /** @var list<PhpTemplate|string> */
         public array $templates = [],
+        #[ArrayOf('string')]
+        public array $docs = [],
         public bool $strictTypes = true,
     ) {
         $this->traits = array_map(

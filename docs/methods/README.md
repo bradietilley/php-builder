@@ -51,9 +51,13 @@ new PhpMethod(
 | `throws` | `list<string>` | `[]` | FQCNs become `@throws` (and are imported) |
 | `templates` | `list<PhpTemplate\|string>` | `[]` | Method-level `@template` tags |
 | `attributes` | `list<PhpAttribute>` | `[]` | |
+| `docs` | `list<string>` | `[]` | Extra docblock lines (appended after generated tags) |
 | `signatureOnly` | `bool` | `false` | Force `;` with no body (interfaces set this for you) |
 
 Empty `lines` entries become blank lines in the method body.
+
+To build a method from a live closure (signature + body copied from source), see
+[Closures](../closures/README.md) (`PhpMethod::fromClosure()`).
 
 ### Abstract methods
 
