@@ -49,12 +49,11 @@ echo $class->toPhp();
 - [Imports & Aliasing](imports/README.md)
 - [Attributes & Constants](attributes/README.md)
 - [Formatting](formatting/README.md)
-- [PHP Target](php-target/README.md)
 - [Compatibility](compatibility/README.md)
 
 ## Requirements
 
-- PHP 8.3+
+- PHP 8.5
 - [`bradietilley/php-data`](https://bradietilley.dev/php-data) (pulled in automatically)
 
 ## Quick start

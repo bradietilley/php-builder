@@ -1,16 +1,6 @@
 <?php
 
-use BradieTilley\Builder\Support\PhpTarget;
-
 require_once __DIR__ . '/../Support/KitchenSinkBuilders.php';
-
-beforeEach(function () {
-    PhpTarget::using('8.3');
-});
-
-afterEach(function () {
-    PhpTarget::clear();
-});
 
 /**
  * @return array<string, callable(): object>

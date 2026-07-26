@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP **8.3+**
+- PHP **8.5**
 - [`bradietilley/php-data`](https://bradietilley.dev/php-data) (installed automatically as a dependency)
 
 The package is framework-agnostic. Laravel is only used in the test suite.
@@ -41,7 +41,7 @@ $php = (new PhpClass(
 
 All public types live under `BradieTilley\Builder` (and
 `BradieTilley\Builder\Types` for the type system,
-`BradieTilley\Builder\Support` for targeting/imports helpers).
+`BradieTilley\Builder\Support` for imports and other helpers).
 
 ## Next steps
 

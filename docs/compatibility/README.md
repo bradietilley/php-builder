@@ -4,12 +4,10 @@
 
 | PHP | Status |
 | --- | --- |
-| 8.3, 8.4, 8.5 | Supported |
+| 8.5 | Supported |
 
-The package itself requires PHP 8.3+. Generated syntax can be constrained further
-with [`PhpTarget`](../php-target/README.md) so emitters stay compatible with a
-chosen language level (for example, omitting `final` on promoted properties
-below 8.5).
+This package line requires PHP 8.5. Emitters always produce PHP 8.5 syntax
+(for example, `final` on promoted constructor properties).
 
 ## Dependencies
 
@@ -21,8 +19,17 @@ Laravel is **not** required at runtime.
 
 ## Versioning
 
-This package follows [Semantic Versioning](https://semver.org). Breaking changes
-are reserved for major releases.
+Package majors track PHP minors:
+
+| Package | PHP |
+| --- | --- |
+| `v1.x` | 8.5 |
+| `v2.x` | 8.6 |
+| … | … |
+
+Within a major, this package follows [Semantic Versioning](https://semver.org).
+Breaking API changes are reserved for major releases (which also move to the
+next PHP minor).
 
 ## Notes for contributors
 

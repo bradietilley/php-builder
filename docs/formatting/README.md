@@ -47,4 +47,4 @@ PhpFormatter::using(function (string $php): string {
 Clear the callback in tests (`PhpFormatter::clear()`) so formatting does not
 leak across cases.
 
-Continue to [PHP Target](../php-target/README.md).
+Continue to [Compatibility](../compatibility/README.md).

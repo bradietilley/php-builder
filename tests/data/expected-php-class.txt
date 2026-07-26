@@ -80,7 +80,7 @@ abstract class KitchenSink extends Model implements Identifiable, Sluggable
                 $this->nickname = trim($value);
             }
         },
-        public private(set) string $name = 'untitled',
+        final public private(set) string $name = 'untitled',
         array $flags = [],
         string ...$tags,
     ) {

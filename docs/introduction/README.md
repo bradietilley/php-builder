@@ -24,8 +24,6 @@ hand.
   type syntax alone.
 - **Modern PHP surface.** Constructor promotion, asymmetric visibility, property
   hooks, backed enums, trait adaptations, and generics templates are first-class.
-- **Targetable.** Version-gated syntax (e.g. `final` promoted properties) can be
-  toggled via [`PhpTarget`](../php-target/README.md).
 
 ## What it is not
 

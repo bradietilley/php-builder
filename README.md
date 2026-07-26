@@ -5,7 +5,7 @@ and enums — with imports, attributes, typed members, property hooks, and PHPDo
 
 ![Static Analysis](https://github.com/bradietilley/php-builder/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/bradietilley/php-builder/actions/workflows/tests.yml/badge.svg)
-![PHP Version](https://img.shields.io/badge/PHP%20Version-8.3-4F5B93)
+![PHP Version](https://img.shields.io/badge/PHP%20Version-8.5-4F5B93)
 
 ## Documentation
 
@@ -118,7 +118,7 @@ PhpFormatter::using(function (string $php): string {
 });
 ```
 
-See the [documentation](https://bradietilley.dev/php-builder) for classes, interfaces, traits, enums, methods, properties & hooks, types, imports, attributes, formatting, and PHP targeting.
+See the [documentation](https://bradietilley.dev/php-builder) for classes, interfaces, traits, enums, methods, properties & hooks, types, imports, attributes, and formatting.
 
 ## Credits
 

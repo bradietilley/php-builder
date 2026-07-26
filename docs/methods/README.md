@@ -108,7 +108,7 @@ new PhpArgument(
     visibility: null,       // set → constructor promotion
     setVisibility: null,    // asymmetric set on promoted props
     readonly: false,
-    final: false,           // PHP 8.5+ when PhpTarget allows
+    final: false,           // promoted params only
     description: null,
     get: null,              // promoted property hooks
     set: null,
@@ -124,7 +124,7 @@ new PhpArgument(
 | `visibility` | Any visibility implies **constructor property promotion** |
 | `promoted` | Also available; setting visibility sets this automatically |
 | `setVisibility` | Asymmetric visibility: `public private(set)` |
-| `final` | Only on promoted params; gated by [PHP Target](../php-target/README.md) 8.5+ |
+| `final` | Only on promoted params |
 | `get` / `set` | Property hooks on promoted parameters only |
 | `attributes` | Parameter attributes (e.g. `#[SensitiveParameter]`) |
 
