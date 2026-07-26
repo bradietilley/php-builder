@@ -1,0 +1,142 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Attributes\Column;
+use App\Attributes\Internal;
+use App\Attributes\OwnedBy;
+use App\Contracts\Identifiable;
+use App\Contracts\Sluggable;
+use App\Models\Concerns\HasSlug;
+use App\Models\Concerns\HasTimestamps;
+use App\Models\Concerns\HasUuid;
+use App\Support\TagQuery;
+use Illuminate\Database\Eloquent\Model as ModelEloquent;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Stringable;
+
+/**
+ * Kitchen-sink class exercising the builder surface
+ *
+ * @template covariant TKey of array-key
+ * @template contravariant TValue
+ * @template TExtra
+ */
+#[AllowDynamicProperties]
+#[OwnedBy(team: 'platform')]
+readonly class KitchenSink extends Model implements Identifiable, Sluggable
+{
+    use HasTimestamps;
+    use HasSlug, HasUuid {
+        HasSlug::boot insteadof HasUuid;
+        HasSlug::bootHasSlug as protected bootSlug;
+    }
+
+    #[Deprecated(message: 'use NAME')]
+    public const string TYPE = 'kitchen';
+
+    final private const int MAX = 100;
+
+    /**
+     * Display title
+     */
+    #[Column(length: 255)]
+    public string $title = '';
+
+    protected private(set) string|int $code;
+
+    /**
+     * @var array<string, Collection> $meta
+     */
+    public static readonly array $meta;
+
+    public string $slug {
+        &get => $this->slug;
+        set(string $value) => $this->slug = strtolower($value);
+    }
+
+    final public string $label {
+        get {
+            return strtoupper($this->title);
+        }
+        set(Stringable $incoming) {
+            $this->title = (string) $incoming;
+        }
+    }
+
+    /**
+     * @param array<string> $flags Optional feature flags
+     */
+    public function __construct(
+        public readonly string $id,
+        final public private(set) string $name = 'untitled',
+        protected string $nickname {
+            get {
+                return $this->nickname;
+            }
+            set(string $value) {
+                $this->nickname = trim($value);
+            }
+        },
+        array $flags = [],
+        int &$count,
+        string ...$tags,
+    ) {
+        $this->title = $name;
+
+        // ready
+    }
+
+    /**
+     * Map values with a callback
+     *
+     * @template TReturn of mixed
+     * @param callable(mixed): TReturn $callback
+     * @return array<TReturn>
+     */
+    public static function map(callable $callback): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws RuntimeException
+     * @throws ModelNotFoundException
+     */
+    #[Internal]
+    final public function asEloquent(): ModelEloquent
+    {
+        return $this;
+    }
+
+    public function &resolve(
+        Identifiable&Sluggable $entity,
+        ?Closure $fallback = null,
+    ): Identifiable|null {
+        return $entity;
+    }
+
+    /**
+     * @param callable(string): bool|null $filter
+     */
+    protected function transform(
+        #[SensitiveParameter]
+        ?Closure $filter = null,
+    ): int {
+        return 0;
+    }
+
+    abstract private function boot(): void;
+
+    /**
+     * @param array<string> $tags
+     */
+    public function syncTags(array $tags): static
+    {
+        $query = TagQuery::make($tags);
+        return $this;
+    }
+}

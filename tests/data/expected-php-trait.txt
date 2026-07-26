@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Concerns;
+
+use App\Attributes\TraitMarker;
+
+/**
+ * Kitchen-sink trait
+ *
+ * @template TOwner
+ */
+#[TraitMarker]
+trait KitchenTrait
+{
+    use LogsActivity, TracksChanges {
+        LogsActivity::track insteadof TracksChanges;
+        log as writeLog;
+    }
+    use HasHelpers;
+
+    protected const string PREFIX = 'kt_';
+
+    public bool $enabled = true;
+
+    /**
+     * @var array<string> $buffer
+     */
+    private array $buffer;
+
+    abstract public string $key {
+        get;
+    }
+
+    protected function bootKitchenTrait()
+    {
+        $this->enabled = true;
+    }
+
+    /**
+     * Flush the buffer
+     *
+     * @return array<string>
+     */
+    public function flush(): array
+    {
+        $copy = $this->buffer;
+        $this->buffer = [];
+
+        return $copy;
+    }
+
+    /**
+     * @param callable(self): void $callback
+     */
+    public function configure(callable $callback): static
+    {
+        $callback($this);
+
+        return $this;
+    }
+}

@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Contracts;
+
+use App\Attributes\Contract;
+use App\Enums\Status;
+
+/**
+ * Kitchen-sink interface
+ *
+ * @template TResource of object
+ */
+#[Contract]
+interface KitchenContract extends Identifiable, Serializable
+{
+    final public const int VERSION = 1;
+
+    public string $name {
+        get;
+        set;
+    }
+
+    /**
+     * @var array<Status> $statuses
+     */
+    public array $statuses {
+        get;
+    }
+
+    /**
+     * Handle the contract payload
+     *
+     * @template TContext
+     * @param string|int $input Raw input
+     * @param callable(mixed): void $next
+     * @throws InvalidArgumentException
+     */
+    public function handle(
+        string|int $input,
+        callable $next,
+    ): Identifiable&Stringable;
+
+    public function id(): string;
+}

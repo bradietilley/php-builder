@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Enums;
+
+/**
+ * Kitchen-sink pure enum
+ */
+enum KitchenRole
+{
+    case Admin;
+    case Editor;
+    case Viewer;
+
+    public function isStaff(): bool
+    {
+        return $this === self::Admin || $this === self::Editor;
+    }
+}
