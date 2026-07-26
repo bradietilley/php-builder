@@ -61,10 +61,11 @@ class PhpInterface extends Data implements ExportsPhp
             $this->extends,
         )));
 
+        $imports = $this->imports();
         $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
-            $body[] = $attribute->toPhp($indent);
+            $body[] = $attribute->withResolvedImports($imports)->toPhp($indent);
         }
 
         $signature = ['interface', $this->name];
@@ -83,7 +84,7 @@ class PhpInterface extends Data implements ExportsPhp
             $constantLines = [];
 
             foreach ($this->constants as $constant) {
-                $constantLines[] = $constant->toPhp($indent + 1);
+                $constantLines[] = $constant->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $constantLines);
@@ -93,7 +94,7 @@ class PhpInterface extends Data implements ExportsPhp
             $propertyLines = [];
 
             foreach ($this->properties as $property) {
-                $propertyLines[] = $property->toPhp($indent + 1);
+                $propertyLines[] = $property->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $propertyLines);
@@ -103,7 +104,7 @@ class PhpInterface extends Data implements ExportsPhp
             $methodLines = [];
 
             foreach ($this->methods as $method) {
-                $method = clone $method;
+                $method = $method->withResolvedImports($imports);
                 $method->signatureOnly = true;
                 $method->abstract = false;
                 $methodLines[] = $method->toPhp($indent + 1);

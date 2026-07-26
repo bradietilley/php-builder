@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder\Types;
 
 use BradieTilley\Builder\Contracts\PhpType;
+use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Data\Data;
 
 class PhpNamedType extends Data implements PhpType
@@ -27,6 +28,18 @@ class PhpNamedType extends Data implements PhpType
     public function needsPhpDoc(): bool
     {
         return false;
+    }
+
+    public function withResolvedImports(ImportBag $imports): static
+    {
+        if (! str_contains(ltrim($this->name, '\\'), '\\')) {
+            return $this;
+        }
+
+        $resolved = clone $this;
+        $resolved->name = $imports->import($this->name);
+
+        return $resolved;
     }
 
     public function toPhp(int $indent = 0): string

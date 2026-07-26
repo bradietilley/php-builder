@@ -5,12 +5,14 @@ namespace BradieTilley\Builder;
 use BradieTilley\Builder\Concerns\HasVisibility;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Contracts\PhpType;
+use BradieTilley\Builder\Contracts\ResolvesTypeImports;
+use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
-class PhpClassConstant extends Data implements ExportsPhp
+class PhpClassConstant extends Data implements ExportsPhp, ResolvesTypeImports
 {
     use HasVisibility;
 
@@ -29,6 +31,18 @@ class PhpClassConstant extends Data implements ExportsPhp
         public array $attributes = [],
     ) {
         $this->type = TypeFactory::make($type);
+    }
+
+    public function withResolvedImports(ImportBag $imports): static
+    {
+        $resolved = clone $this;
+        $resolved->type = $this->type?->withResolvedImports($imports);
+        $resolved->attributes = array_map(
+            fn (PhpAttribute $attribute): PhpAttribute => $attribute->withResolvedImports($imports),
+            $this->attributes,
+        );
+
+        return $resolved;
     }
 
     public function toPhp(int $indent = 0): string

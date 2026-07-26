@@ -3,6 +3,7 @@
 namespace BradieTilley\Builder\Types;
 
 use BradieTilley\Builder\Contracts\PhpType;
+use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Data;
 
@@ -41,6 +42,17 @@ class PhpUnionType extends Data implements PhpType
         }
 
         return false;
+    }
+
+    public function withResolvedImports(ImportBag $imports): static
+    {
+        $resolved = clone $this;
+        $resolved->types = array_map(
+            fn (PhpType $type): PhpType => $type->withResolvedImports($imports),
+            $this->types,
+        );
+
+        return $resolved;
     }
 
     public function toPhp(int $indent = 0): string

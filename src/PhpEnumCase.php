@@ -3,11 +3,13 @@
 namespace BradieTilley\Builder;
 
 use BradieTilley\Builder\Contracts\ExportsPhp;
+use BradieTilley\Builder\Contracts\ResolvesTypeImports;
+use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
-class PhpEnumCase extends Data implements ExportsPhp
+class PhpEnumCase extends Data implements ExportsPhp, ResolvesTypeImports
 {
     /**
      * @param  list<PhpAttribute>  $attributes
@@ -18,6 +20,17 @@ class PhpEnumCase extends Data implements ExportsPhp
         #[ArrayOf(PhpAttribute::class)]
         public array $attributes = [],
     ) {
+    }
+
+    public function withResolvedImports(ImportBag $imports): static
+    {
+        $resolved = clone $this;
+        $resolved->attributes = array_map(
+            fn (PhpAttribute $attribute): PhpAttribute => $attribute->withResolvedImports($imports),
+            $this->attributes,
+        );
+
+        return $resolved;
     }
 
     public function toPhp(int $indent = 0): string

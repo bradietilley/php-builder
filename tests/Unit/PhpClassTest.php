@@ -82,8 +82,6 @@ test('readme golden example', function () {
         ],
     );
 
-    $name = $class->import('Illuminate\\Database\\Eloquent\\Model');
-
     $class->methods[] = new PhpMethod(
         visibility: PhpMethod::VISIBILITY_PUBLIC,
         final: true,
@@ -95,7 +93,7 @@ test('readme golden example', function () {
                 defaultValue: '[]',
             ),
         ],
-        return: $name,
+        return: 'Illuminate\\Database\\Eloquent\\Model',
         lines: [
             '$tags = Tag::query()->whereIn("name", $tags)->pluck("id");',
             '$this->tags()->sync($tags);',
@@ -133,6 +131,115 @@ class Post extends Model implements WithSlug
 }
 
 PHP);
+});
+
+test('return type fqcn is auto-imported with clash alias at generate time', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'Post',
+        extends: 'App\\Models\\Model',
+        methods: [
+            new PhpMethod(
+                name: 'asEloquent',
+                return: 'Illuminate\\Database\\Eloquent\\Model',
+                lines: ['return $this;'],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    $php = $class->toPhp();
+
+    expect($php)->toContain('use Illuminate\\Database\\Eloquent\\Model as ModelEloquent;')
+        ->and($php)->toContain('function asEloquent(): ModelEloquent')
+        ->and($php)->toContain('class Post extends Model');
+});
+
+test('nested array type fqcn is auto-imported for phpdoc', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'Post',
+        methods: [
+            new PhpMethod(
+                name: 'tags',
+                args: [
+                    new PhpArgument(
+                        type: new PhpArrayType(value: 'Illuminate\\Support\\Collection'),
+                        name: 'tags',
+                    ),
+                ],
+                lines: ['return $tags;'],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    $php = $class->toPhp();
+
+    expect($php)->toContain('use Illuminate\\Support\\Collection;')
+        ->and($php)->toContain('@param array<Collection> $tags')
+        ->and($php)->toContain('function tags(array $tags)');
+});
+
+test('explicit import alias still works for return type', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'Post',
+        extends: 'App\\Models\\Model',
+        strictTypes: false,
+    );
+
+    $name = $class->import('Illuminate\\Database\\Eloquent\\Model');
+
+    $class->methods[] = new PhpMethod(
+        name: 'asEloquent',
+        return: $name,
+        lines: ['return $this;'],
+    );
+
+    expect($name)->toBe('ModelEloquent')
+        ->and($class->toPhp())->toContain('function asEloquent(): ModelEloquent');
+});
+
+test('same fqcn in return and param resolves once', function () {
+    $class = new PhpClass(
+        namespace: 'App',
+        name: 'Example',
+        methods: [
+            new PhpMethod(
+                name: 'wrap',
+                args: [
+                    new PhpArgument(type: 'Illuminate\\Support\\Collection', name: 'items'),
+                ],
+                return: 'Illuminate\\Support\\Collection',
+                lines: ['return $items;'],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    $php = $class->toPhp();
+
+    expect(substr_count($php, 'use Illuminate\\Support\\Collection;'))->toBe(1)
+        ->and($php)->toContain('function wrap(Collection $items): Collection');
+});
+
+test('short type names are left unchanged', function () {
+    $class = new PhpClass(
+        namespace: 'App',
+        name: 'Example',
+        methods: [
+            new PhpMethod(
+                name: 'id',
+                return: 'string',
+                lines: ['return "1";'],
+            ),
+        ],
+        strictTypes: false,
+    );
+
+    expect($class->toPhp())->toContain('function id(): string')
+        ->and($class->toPhp())->not->toContain('use ');
 });
 
 test('trait aliases are exported', function () {

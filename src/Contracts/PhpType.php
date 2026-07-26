@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Builder\Contracts;
 
-interface PhpType extends ExportsPhp, ExportsPhpDoc
+interface PhpType extends ExportsPhp, ExportsPhpDoc, ResolvesTypeImports
 {
     public function isNullable(): bool;
 

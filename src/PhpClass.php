@@ -97,10 +97,11 @@ class PhpClass extends Data implements ExportsPhp
             $this->traits,
         );
 
+        $imports = $this->imports();
         $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
-            $body[] = $attribute->toPhp($indent);
+            $body[] = $attribute->withResolvedImports($imports)->toPhp($indent);
         }
 
         $body[] = Indent::of($indent) . $this->classSignature($extends, $implements);
@@ -122,7 +123,7 @@ class PhpClass extends Data implements ExportsPhp
             $constantLines = [];
 
             foreach ($this->constants as $constant) {
-                $constantLines[] = $constant->toPhp($indent + 1);
+                $constantLines[] = $constant->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $constantLines);
@@ -132,7 +133,7 @@ class PhpClass extends Data implements ExportsPhp
             $propertyLines = [];
 
             foreach ($this->properties as $property) {
-                $propertyLines[] = $property->toPhp($indent + 1);
+                $propertyLines[] = $property->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $propertyLines);
@@ -142,7 +143,7 @@ class PhpClass extends Data implements ExportsPhp
             $methodLines = [];
 
             foreach ($this->methods as $method) {
-                $methodLines[] = $method->toPhp($indent + 1);
+                $methodLines[] = $method->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $methodLines);

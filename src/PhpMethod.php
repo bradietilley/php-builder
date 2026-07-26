@@ -5,13 +5,15 @@ namespace BradieTilley\Builder;
 use BradieTilley\Builder\Concerns\HasVisibility;
 use BradieTilley\Builder\Contracts\ExportsPhp;
 use BradieTilley\Builder\Contracts\PhpType;
+use BradieTilley\Builder\Contracts\ResolvesTypeImports;
+use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\Indent;
 use BradieTilley\Builder\Support\PhpDoc;
 use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
 
-class PhpMethod extends Data implements ExportsPhp
+class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
 {
     use HasVisibility;
 
@@ -45,6 +47,32 @@ class PhpMethod extends Data implements ExportsPhp
         public bool $signatureOnly = false,
     ) {
         $this->return = TypeFactory::make($return);
+    }
+
+    public function withResolvedImports(ImportBag $imports): static
+    {
+        $resolved = clone $this;
+        $resolved->return = $this->return?->withResolvedImports($imports);
+        $resolved->args = array_map(
+            fn (PhpArgument $arg): PhpArgument => $arg->withResolvedImports($imports),
+            $this->args,
+        );
+        $resolved->attributes = array_map(
+            fn (PhpAttribute $attribute): PhpAttribute => $attribute->withResolvedImports($imports),
+            $this->attributes,
+        );
+        $resolved->throws = array_map(
+            function (string $throw) use ($imports): string {
+                if (! str_contains(ltrim($throw, '\\'), '\\')) {
+                    return $throw;
+                }
+
+                return $imports->import($throw);
+            },
+            $this->throws,
+        );
+
+        return $resolved;
     }
 
     public function toPhp(int $indent = 0): string

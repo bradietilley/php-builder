@@ -37,9 +37,6 @@ $class = new PhpClass(
     methods: [],
 );
 
-// example for handling clashes (extends already reserved "Model")
-$name = $class->import('Illuminate\Database\Eloquent\Model'); // returns "ModelEloquent"
-
 $class->methods[] = new PhpMethod(
     visibility: PhpMethod::VISIBILITY_PUBLIC,
     final: true,
@@ -51,7 +48,9 @@ $class->methods[] = new PhpMethod(
             defaultValue: '[]',
         ),
     ],
-    return: $name, // uses the aliased name as the return type
+    // FQCNs in type annotations are imported (and clash-aliased) at generate time.
+    // extends already reserved "Model", so this becomes ModelEloquent.
+    return: 'Illuminate\Database\Eloquent\Model',
     lines: [
         '$tags = Tag::query()->whereIn("name", $tags)->pluck("id");',
         '$this->tags()->sync($tags);',
@@ -92,6 +91,13 @@ class Post extends Model implements WithSlug
         return $this;
     }
 }
+```
+
+When you need the aliased name inside method body lines, import it explicitly first:
+
+```php
+$name = $class->import('Illuminate\Database\Eloquent\Model'); // "ModelEloquent"
+// use $name in return: and/or in $lines
 ```
 
 ### Post-generation formatting

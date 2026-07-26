@@ -67,16 +67,18 @@ class PhpEnum extends Data implements ExportsPhp
             $this->implements,
         )));
 
+        $imports = $this->imports();
+        $backedType = $this->backedType?->withResolvedImports($imports);
         $body = $this->prependTypeDoc([], $indent);
 
         foreach ($this->attributes as $attribute) {
-            $body[] = $attribute->toPhp($indent);
+            $body[] = $attribute->withResolvedImports($imports)->toPhp($indent);
         }
 
         $signature = 'enum ' . $this->name;
 
-        if ($this->backedType !== null) {
-            $signature .= ': ' . $this->backedType->toPhp();
+        if ($backedType !== null) {
+            $signature .= ': ' . $backedType->toPhp();
         }
 
         if ($implements !== []) {
@@ -92,7 +94,7 @@ class PhpEnum extends Data implements ExportsPhp
             $caseLines = [];
 
             foreach ($this->cases as $case) {
-                $caseLines[] = $case->toPhp($indent + 1);
+                $caseLines[] = $case->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n", $caseLines);
@@ -102,7 +104,7 @@ class PhpEnum extends Data implements ExportsPhp
             $constantLines = [];
 
             foreach ($this->constants as $constant) {
-                $constantLines[] = $constant->toPhp($indent + 1);
+                $constantLines[] = $constant->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $constantLines);
@@ -112,7 +114,7 @@ class PhpEnum extends Data implements ExportsPhp
             $methodLines = [];
 
             foreach ($this->methods as $method) {
-                $methodLines[] = $method->toPhp($indent + 1);
+                $methodLines[] = $method->withResolvedImports($imports)->toPhp($indent + 1);
             }
 
             $sections[] = implode("\n\n", $methodLines);
