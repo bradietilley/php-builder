@@ -17,15 +17,6 @@
             "email": "bradietilley@gmail.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../php-data",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "require": {
         "php": "^8.3",
         "bradietilley/php-data": "*"
