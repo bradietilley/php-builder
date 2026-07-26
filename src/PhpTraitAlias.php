@@ -25,7 +25,7 @@ class PhpTraitAlias extends Data implements ExportsPhp
             ? $this->trait . '::' . $this->method
             : $this->method;
 
-        $right = trim(($this->visibility?->value ?? '') . ' ' . ($this->alias ?? ''));
+        $right = trim(($this->visibility->value ?? '') . ' ' . ($this->alias ?? ''));
 
         if ($right === '') {
             $right = $this->method;
