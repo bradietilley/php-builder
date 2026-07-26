@@ -17,11 +17,11 @@ trait ExportsPhpFile
         return $this->importBag ??= new ImportBag($this->namespace);
     }
 
-    public function import(string $fqcn): string
+    public function import(string $fqcn, ?string $alias = null): string
     {
         $this->reserveStructuralNames();
 
-        return $this->imports()->import($fqcn);
+        return $this->imports()->import($fqcn, $alias);
     }
 
     /**

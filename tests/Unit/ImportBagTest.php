@@ -60,3 +60,28 @@ test('php class import is available and used in generated file', function () {
         ->and($class->toPhp())->toContain('use Illuminate\\Database\\Eloquent\\Model as ModelEloquent;')
         ->and($class->toPhp())->toContain('class Post extends Model');
 });
+
+test('import accepts an explicit manual alias', function () {
+    $bag = new ImportBag('App\\Models');
+    $bag->import('App\\Models\\Concerns\\HasSlug');
+
+    expect($bag->import('Example\\For\\DuplicateTrait\\HasSlug', 'SlugTrait'))->toBe('SlugTrait')
+        ->and($bag->toUseLines())->toBe([
+            'use App\\Models\\Concerns\\HasSlug;',
+            'use Example\\For\\DuplicateTrait\\HasSlug as SlugTrait;',
+        ]);
+});
+
+test('php class import accepts an explicit manual alias', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'Post',
+        extends: 'App\\Models\\Model',
+    );
+
+    $alias = $class->import('Illuminate\\Database\\Eloquent\\Model', 'EloquentModel');
+
+    expect($alias)->toBe('EloquentModel')
+        ->and($class->toPhp())->toContain('use Illuminate\\Database\\Eloquent\\Model as EloquentModel;')
+        ->and($class->toPhp())->toContain('class Post extends Model');
+});

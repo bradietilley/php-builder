@@ -96,7 +96,12 @@ class Post extends Model implements WithSlug
 When you need the aliased name inside method body lines, import it explicitly first:
 
 ```php
+// Automatic clash alias (extends already took "Model"):
 $name = $class->import('Illuminate\Database\Eloquent\Model'); // "ModelEloquent"
+
+// Or choose the alias yourself:
+$name = $class->import('Illuminate\Database\Eloquent\Model', 'EloquentModel');
+
 // use $name in return: and/or in $lines
 ```
 

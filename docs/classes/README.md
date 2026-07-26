@@ -97,7 +97,9 @@ bodies, then push methods that reference that alias:
 ```php
 $class = new PhpClass(namespace: 'App\\Models', name: 'Post');
 
-$tagQuery = $class->import('App\\Support\\TagQuery'); // "TagQuery" or an alias
+$tagQuery = $class->import('App\\Support\\TagQuery'); // "TagQuery" or an auto alias
+// Or force a name when you know of a clash:
+// $tagQuery = $class->import('App\\Support\\TagQuery', 'SupportTagQuery');
 
 $class->methods[] = new PhpMethod(
     name: 'syncTags',

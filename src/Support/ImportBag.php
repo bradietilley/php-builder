@@ -29,8 +29,11 @@ class ImportBag
 
     /**
      * Register an FQCN import and return the usable short or aliased name.
+     *
+     * Pass `$alias` to force a manual `use … as …` name instead of the automatic
+     * clash-resolution convention.
      */
-    public function import(string $fqcn): string
+    public function import(string $fqcn, ?string $alias = null): string
     {
         $fqcn = ltrim($fqcn, '\\');
 
@@ -48,7 +51,7 @@ class ImportBag
             return $this->imports[$fqcn] ?? self::basename($fqcn);
         }
 
-        if ($this->isSameNamespaceSibling($fqcn)) {
+        if ($alias === null && $this->isSameNamespaceSibling($fqcn)) {
             $base = self::basename($fqcn);
 
             if (! isset($this->usedNames[$base]) || $this->usedNames[$base] === $fqcn) {
@@ -58,11 +61,11 @@ class ImportBag
             }
         }
 
-        $alias = $this->resolveAlias($fqcn);
-        $this->imports[$fqcn] = $alias === self::basename($fqcn) ? null : $alias;
-        $this->usedNames[$alias] = $fqcn;
+        $resolved = $alias ?? $this->resolveAlias($fqcn);
+        $this->imports[$fqcn] = $resolved === self::basename($fqcn) ? null : $resolved;
+        $this->usedNames[$resolved] = $fqcn;
 
-        return $alias;
+        return $resolved;
     }
 
     /**

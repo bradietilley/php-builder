@@ -17,7 +17,8 @@ hand.
   arguments and public properties you can mutate after construction.
 - **Import-aware.** FQCNs in extends/implements/traits, return types, attributes,
   and PHPDoc are collected into `use` statements. Name clashes are aliased
-  automatically — see [Imports & Aliasing](../imports/README.md).
+  automatically, or you can pass an explicit alias to `import()` — see
+  [Imports & Aliasing](../imports/README.md).
 - **Docblock-aware.** Array shapes, callable signatures, templates, `@throws`,
   and descriptions are rendered as PHPDoc when they cannot be expressed in native
   type syntax alone.
