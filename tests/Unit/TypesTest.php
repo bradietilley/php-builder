@@ -93,3 +93,22 @@ test('union and intersection types export correctly', function () {
     expect($union->toPhp())->toBe('string|int')
         ->and($intersection->toPhp())->toBe('Countable&Iterator');
 });
+
+test('type factory parses union strings into separately importable named types', function () {
+    $imports = new ImportBag(namespace: 'App\\Data');
+    $type = \BradieTilley\Builder\Support\TypeFactory::make(
+        'BradieTilley\\Data\\Attributes\\Sometimes|\\App\\Data\\ImageData',
+    )->withResolvedImports($imports);
+
+    expect($type->toPhp())->toBe('Sometimes|ImageData')
+        ->and($imports->toUseLines())->toBe([
+            'use BradieTilley\\Data\\Attributes\\Sometimes;',
+        ]);
+});
+
+test('type factory leaves generic strings intact', function () {
+    $type = \BradieTilley\Builder\Support\TypeFactory::make('array<string|int>');
+
+    expect($type)->toBeInstanceOf(PhpNamedType::class)
+        ->and($type->toPhp())->toBe('array<string|int>');
+});

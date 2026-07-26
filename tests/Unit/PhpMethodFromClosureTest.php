@@ -71,6 +71,27 @@ test('fromClosure rejects use bindings', function () {
     PhpMethod::fromClosure($closure, name: 'fail');
 })->throws(InvalidPhpDefinitionException::class, 'use()');
 
+test('fromClosure prefers outer closure over nested arrow functions', function () {
+    $closure = function (object $post, object $actor): void {
+        $ids = [1, 2];
+
+        collect($ids)->each(
+            fn (int $id) => $actor->notify($post, $id),
+        );
+    };
+
+    $method = PhpMethod::fromClosure($closure, name: 'handle');
+
+    expect($method->toPhp())->toContain('collect($ids)->each(')
+        ->and($method->toPhp())->toContain('fn(int $id) => $actor->notify($post, $id)')
+        ->and($method->toPhp())->not->toBe(<<<'PHP'
+public function handle(object $post, object $actor): void
+{
+    return $actor->notify($post, $id);
+}
+PHP);
+});
+
 test('fromClosure supports multi-statement bodies', function () {
     $closure = function (array $tags): self {
         $ids = Tag::query()->whereIn('name', $tags)->pluck('id');

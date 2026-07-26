@@ -101,8 +101,17 @@ class ClosureSource
             );
         }
 
-        // Prefer the innermost / latest match when multiple closures share the range.
-        return $candidates[array_key_last($candidates)];
+        // Prefer the outermost closure. Nested arrow functions / closures share the
+        // reflection line range but must not be selected for body extraction.
+        usort(
+            $candidates,
+            static function (ClosureNode|ArrowFunction $a, ClosureNode|ArrowFunction $b): int {
+                return [$a->getStartLine(), -$a->getEndLine()]
+                    <=> [$b->getStartLine(), -$b->getEndLine()];
+            },
+        );
+
+        return $candidates[0];
     }
 
     /**

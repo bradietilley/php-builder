@@ -88,6 +88,7 @@ class PhpClass extends Data implements ExportsPhp
 
     public function toPhp(int $indent = 0): string
     {
+        $this->imports()->reserveLocalName($this->name);
         $this->reserveStructuralNames();
 
         $extends = $this->resolveTypeName($this->extends);

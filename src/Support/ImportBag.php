@@ -28,6 +28,20 @@ class ImportBag
     }
 
     /**
+     * Reserve a short local name (e.g. the class being generated) so imports alias on clash.
+     */
+    public function reserveLocalName(string $name): void
+    {
+        $name = ltrim($name, '\\');
+
+        if ($name === '' || str_contains($name, '\\')) {
+            return;
+        }
+
+        $this->usedNames[$name] ??= ($this->namespace !== '' ? $this->namespace . '\\' . $name : $name);
+    }
+
+    /**
      * Register an FQCN import and return the usable short or aliased name.
      *
      * Pass `$alias` to force a manual `use … as …` name instead of the automatic
