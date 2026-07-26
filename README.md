@@ -11,6 +11,13 @@ and enums — with imports, attributes, typed members, property hooks, and PHPDo
 
 Full documentation is available at [bradietilley.dev/php-builder](https://bradietilley.dev/php-builder).
 
+## PHP Versions
+
+| PHP | Package |
+| --- | --- |
+| 8.5 | `v1.x` |
+| 8.6 (est. Nov 2026) | `v2.x` |
+
 ## Installation
 
 ```bash
