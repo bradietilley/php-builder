@@ -65,7 +65,7 @@ function kitchenSinkClass(): PhpClass
             new PhpClassConstant(
                 name: 'MAX',
                 value: '100',
-                visibility: PhpClassConstant::VISIBILITY_PRIVATE,
+                visibility: PhpClassConstant::VISIBILITY_PROTECTED,
                 final: true,
                 type: 'int',
             ),
@@ -94,7 +94,6 @@ function kitchenSinkClass(): PhpClass
                 type: new PhpArrayType(value: 'Illuminate\\Support\\Collection', key: 'string'),
                 name: 'meta',
                 static: true,
-                readonly: true,
             ),
             new PhpProperty(
                 type: 'string',
@@ -114,9 +113,9 @@ function kitchenSinkClass(): PhpClass
                 final: true,
                 get: new PhpPropertyGetHook(lines: ['return strtoupper($this->title);']),
                 set: new PhpPropertySetHook(
-                    type: 'Illuminate\\Support\\Stringable',
+                    type: 'string',
                     name: 'incoming',
-                    lines: ['$this->title = (string) $incoming;'],
+                    lines: ['$this->title = $incoming;'],
                 ),
             ),
         ],
@@ -131,12 +130,9 @@ function kitchenSinkClass(): PhpClass
                         name: 'id',
                     ),
                     new PhpArgument(
-                        visibility: PhpArgument::VISIBILITY_PUBLIC,
-                        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
-                        final: true,
-                        type: 'string',
-                        name: 'name',
-                        defaultValue: "'untitled'",
+                        type: 'int',
+                        name: 'count',
+                        byRef: true,
                     ),
                     new PhpArgument(
                         visibility: PhpArgument::VISIBILITY_PROTECTED,
@@ -149,15 +145,18 @@ function kitchenSinkClass(): PhpClass
                         ),
                     ),
                     new PhpArgument(
+                        visibility: PhpArgument::VISIBILITY_PUBLIC,
+                        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+                        final: true,
+                        type: 'string',
+                        name: 'name',
+                        defaultValue: "'untitled'",
+                    ),
+                    new PhpArgument(
                         type: new PhpArrayType(value: 'string'),
                         name: 'flags',
                         defaultValue: '[]',
                         description: 'Optional feature flags',
-                    ),
-                    new PhpArgument(
-                        type: 'int',
-                        name: 'count',
-                        byRef: true,
                     ),
                     new PhpArgument(
                         type: 'string',
@@ -249,7 +248,7 @@ function kitchenSinkClass(): PhpClass
             ),
             new PhpMethod(
                 name: 'boot',
-                visibility: PhpMethod::VISIBILITY_PRIVATE,
+                visibility: PhpMethod::VISIBILITY_PROTECTED,
                 abstract: true,
                 return: 'void',
             ),
@@ -260,7 +259,7 @@ function kitchenSinkClass(): PhpClass
             new PhpTemplate(name: 'TValue', contravariant: true),
             'TExtra',
         ],
-        readonly: true,
+        abstract: true,
     );
 
     $tagQuery = $class->import('App\\Support\\TagQuery');

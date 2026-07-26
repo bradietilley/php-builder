@@ -5,6 +5,11 @@ use BradieTilley\Builder\PhpArgument;
 use BradieTilley\Builder\PhpMethod;
 use BradieTilley\Builder\PhpPropertyGetHook;
 use BradieTilley\Builder\PhpPropertySetHook;
+use BradieTilley\Builder\Support\PhpTarget;
+
+afterEach(function () {
+    PhpTarget::clear();
+});
 
 test('visibility on argument implies constructor promotion', function () {
     $arg = new PhpArgument(
@@ -18,7 +23,24 @@ test('visibility on argument implies constructor promotion', function () {
         ->and($arg->toPhp())->toBe('public readonly string $title');
 });
 
-test('promoted argument supports asymmetric set visibility and final', function () {
+test('promoted argument final is omitted below php 8.5 target', function () {
+    PhpTarget::using('8.4');
+
+    $arg = new PhpArgument(
+        visibility: PhpArgument::VISIBILITY_PUBLIC,
+        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+        final: true,
+        type: 'string',
+        name: 'name',
+        defaultValue: "'x'",
+    );
+
+    expect($arg->toPhp())->toBe("public private(set) string \$name = 'x'");
+});
+
+test('promoted argument final is emitted for php 8.5 target', function () {
+    PhpTarget::using('8.5');
+
     $arg = new PhpArgument(
         visibility: PhpArgument::VISIBILITY_PUBLIC,
         setVisibility: PhpArgument::VISIBILITY_PRIVATE,

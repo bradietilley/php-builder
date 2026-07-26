@@ -16,7 +16,6 @@ use App\Support\TagQuery;
 use Illuminate\Database\Eloquent\Model as ModelEloquent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Stringable;
 
 /**
  * Kitchen-sink class exercising the builder surface
@@ -27,7 +26,7 @@ use Illuminate\Support\Stringable;
  */
 #[AllowDynamicProperties]
 #[OwnedBy(team: 'platform')]
-readonly class KitchenSink extends Model implements Identifiable, Sluggable
+abstract class KitchenSink extends Model implements Identifiable, Sluggable
 {
     use HasTimestamps;
     use HasSlug, HasUuid {
@@ -38,7 +37,7 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
     #[Deprecated(message: 'use NAME')]
     public const string TYPE = 'kitchen';
 
-    final private const int MAX = 100;
+    final protected const int MAX = 100;
 
     /**
      * Display title
@@ -51,7 +50,7 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
     /**
      * @var array<string, Collection> $meta
      */
-    public static readonly array $meta;
+    public static array $meta;
 
     public string $slug {
         &get => $this->slug;
@@ -62,8 +61,8 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
         get {
             return strtoupper($this->title);
         }
-        set(Stringable $incoming) {
-            $this->title = (string) $incoming;
+        set(string $incoming) {
+            $this->title = $incoming;
         }
     }
 
@@ -72,7 +71,7 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
      */
     public function __construct(
         public readonly string $id,
-        final public private(set) string $name = 'untitled',
+        int &$count,
         protected string $nickname {
             get {
                 return $this->nickname;
@@ -81,8 +80,8 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
                 $this->nickname = trim($value);
             }
         },
+        public private(set) string $name = 'untitled',
         array $flags = [],
-        int &$count,
         string ...$tags,
     ) {
         $this->title = $name;
@@ -129,7 +128,7 @@ readonly class KitchenSink extends Model implements Identifiable, Sluggable
         return 0;
     }
 
-    abstract private function boot(): void;
+    abstract protected function boot(): void;
 
     /**
      * @param array<string> $tags

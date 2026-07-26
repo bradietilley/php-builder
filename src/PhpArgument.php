@@ -9,6 +9,8 @@ use BradieTilley\Builder\Contracts\ResolvesTypeImports;
 use BradieTilley\Builder\Exceptions\InvalidPhpDefinitionException;
 use BradieTilley\Builder\Support\ImportBag;
 use BradieTilley\Builder\Support\Indent;
+use BradieTilley\Builder\Support\PhpFeature;
+use BradieTilley\Builder\Support\PhpTarget;
 use BradieTilley\Builder\Support\TypeFactory;
 use BradieTilley\Data\Attributes\ArrayOf;
 use BradieTilley\Data\Data;
@@ -84,7 +86,7 @@ class PhpArgument extends Data implements ExportsPhp, ResolvesTypeImports
         $signature = [];
 
         if ($this->isPromoted()) {
-            if ($this->final) {
+            if ($this->final && PhpTarget::supports(PhpFeature::FinalPromotedProperties)) {
                 $signature[] = 'final';
             }
 
