@@ -83,7 +83,7 @@ test('readme golden example', function () {
     );
 
     $class->methods[] = new PhpMethod(
-        visibility: PhpMethod::VISIBILITY_PUBLIC,
+        visibility: PhpMethod::public(),
         final: true,
         name: 'setTags',
         args: [
@@ -269,7 +269,7 @@ test('multi-trait use supports insteadof and visibility aliases', function () {
                     new PhpTraitAlias(
                         method: 'boot',
                         alias: 'bootA',
-                        visibility: PhpTraitAlias::VISIBILITY_PRIVATE,
+                        visibility: PhpTraitAlias::private(),
                         trait: 'App\\A',
                     ),
                 ],

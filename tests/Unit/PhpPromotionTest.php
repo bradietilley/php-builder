@@ -13,7 +13,7 @@ afterEach(function () {
 
 test('visibility on argument implies constructor promotion', function () {
     $arg = new PhpArgument(
-        visibility: PhpArgument::VISIBILITY_PUBLIC,
+        visibility: PhpArgument::public(),
         readonly: true,
         type: 'string',
         name: 'title',
@@ -27,8 +27,8 @@ test('promoted argument final is omitted below php 8.5 target', function () {
     PhpTarget::using('8.4');
 
     $arg = new PhpArgument(
-        visibility: PhpArgument::VISIBILITY_PUBLIC,
-        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+        visibility: PhpArgument::public(),
+        setVisibility: PhpArgument::private(),
         final: true,
         type: 'string',
         name: 'name',
@@ -42,8 +42,8 @@ test('promoted argument final is emitted for php 8.5 target', function () {
     PhpTarget::using('8.5');
 
     $arg = new PhpArgument(
-        visibility: PhpArgument::VISIBILITY_PUBLIC,
-        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+        visibility: PhpArgument::public(),
+        setVisibility: PhpArgument::private(),
         final: true,
         type: 'string',
         name: 'name',
@@ -55,7 +55,7 @@ test('promoted argument final is emitted for php 8.5 target', function () {
 
 test('promoted argument supports property hooks', function () {
     $arg = new PhpArgument(
-        visibility: PhpArgument::VISIBILITY_PUBLIC,
+        visibility: PhpArgument::public(),
         type: 'string',
         name: 'name',
         get: new PhpPropertyGetHook(lines: ['return $this->name;']),
@@ -83,14 +83,14 @@ test('constructor method exports promoted parameters', function () {
         name: '__construct',
         args: [
             new PhpArgument(
-                visibility: PhpArgument::VISIBILITY_PUBLIC,
+                visibility: PhpArgument::public(),
                 readonly: true,
                 type: 'string',
                 name: 'title',
             ),
             new PhpArgument(
-                visibility: PhpArgument::VISIBILITY_PUBLIC,
-                setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+                visibility: PhpArgument::public(),
+                setVisibility: PhpArgument::private(),
                 type: 'string',
                 name: 'slug',
             ),

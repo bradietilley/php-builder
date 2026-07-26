@@ -40,7 +40,7 @@ function kitchenSinkClass(): PhpClass
                     new PhpTraitAlias(
                         method: 'bootHasSlug',
                         alias: 'bootSlug',
-                        visibility: PhpTraitAlias::VISIBILITY_PROTECTED,
+                        visibility: PhpTraitAlias::protected(),
                         trait: 'App\\Models\\Concerns\\HasSlug',
                     ),
                 ],
@@ -65,7 +65,7 @@ function kitchenSinkClass(): PhpClass
             new PhpClassConstant(
                 name: 'MAX',
                 value: '100',
-                visibility: PhpClassConstant::VISIBILITY_PROTECTED,
+                visibility: PhpClassConstant::protected(),
                 final: true,
                 type: 'int',
             ),
@@ -87,8 +87,8 @@ function kitchenSinkClass(): PhpClass
             new PhpProperty(
                 type: new PhpUnionType(['string', 'int']),
                 name: 'code',
-                visibility: PhpProperty::VISIBILITY_PROTECTED,
-                setVisibility: PhpProperty::VISIBILITY_PRIVATE,
+                visibility: PhpProperty::protected(),
+                setVisibility: PhpProperty::private(),
             ),
             new PhpProperty(
                 type: new PhpArrayType(value: 'Illuminate\\Support\\Collection', key: 'string'),
@@ -124,7 +124,7 @@ function kitchenSinkClass(): PhpClass
                 name: '__construct',
                 args: [
                     new PhpArgument(
-                        visibility: PhpArgument::VISIBILITY_PUBLIC,
+                        visibility: PhpArgument::public(),
                         readonly: true,
                         type: 'string',
                         name: 'id',
@@ -135,7 +135,7 @@ function kitchenSinkClass(): PhpClass
                         byRef: true,
                     ),
                     new PhpArgument(
-                        visibility: PhpArgument::VISIBILITY_PROTECTED,
+                        visibility: PhpArgument::protected(),
                         type: 'string',
                         name: 'nickname',
                         get: new PhpPropertyGetHook(lines: ['return $this->nickname;']),
@@ -145,8 +145,8 @@ function kitchenSinkClass(): PhpClass
                         ),
                     ),
                     new PhpArgument(
-                        visibility: PhpArgument::VISIBILITY_PUBLIC,
-                        setVisibility: PhpArgument::VISIBILITY_PRIVATE,
+                        visibility: PhpArgument::public(),
+                        setVisibility: PhpArgument::private(),
                         final: true,
                         type: 'string',
                         name: 'name',
@@ -227,7 +227,7 @@ function kitchenSinkClass(): PhpClass
             ),
             new PhpMethod(
                 name: 'transform',
-                visibility: PhpMethod::VISIBILITY_PROTECTED,
+                visibility: PhpMethod::protected(),
                 args: [
                     new PhpArgument(
                         type: new PhpCallableType(
@@ -248,7 +248,7 @@ function kitchenSinkClass(): PhpClass
             ),
             new PhpMethod(
                 name: 'boot',
-                visibility: PhpMethod::VISIBILITY_PROTECTED,
+                visibility: PhpMethod::protected(),
                 abstract: true,
                 return: 'void',
             ),
@@ -373,7 +373,7 @@ function kitchenSinkEnum(): PhpEnum
                 name: 'DEFAULT',
                 value: "self::Draft",
                 type: 'self',
-                visibility: PhpClassConstant::VISIBILITY_PRIVATE,
+                visibility: PhpClassConstant::private(),
             ),
         ],
         methods: [
@@ -461,7 +461,7 @@ function kitchenSinkTrait(): PhpTrait
                 name: 'PREFIX',
                 value: "'kt_'",
                 type: 'string',
-                visibility: PhpClassConstant::VISIBILITY_PROTECTED,
+                visibility: PhpClassConstant::protected(),
             ),
         ],
         properties: [
@@ -473,7 +473,7 @@ function kitchenSinkTrait(): PhpTrait
             new PhpProperty(
                 type: new PhpArrayType(value: 'string'),
                 name: 'buffer',
-                visibility: PhpProperty::VISIBILITY_PRIVATE,
+                visibility: PhpProperty::private(),
             ),
             new PhpProperty(
                 abstract: true,
@@ -485,7 +485,7 @@ function kitchenSinkTrait(): PhpTrait
         methods: [
             new PhpMethod(
                 name: 'bootKitchenTrait',
-                visibility: PhpMethod::VISIBILITY_PROTECTED,
+                visibility: PhpMethod::protected(),
                 lines: ['$this->enabled = true;'],
             ),
             new PhpMethod(

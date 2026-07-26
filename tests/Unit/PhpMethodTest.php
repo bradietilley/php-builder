@@ -7,7 +7,7 @@ use BradieTilley\Builder\Types\PhpArrayType;
 
 test('method exports visibility final and body lines', function () {
     $method = new PhpMethod(
-        visibility: PhpMethod::VISIBILITY_PUBLIC,
+        visibility: PhpMethod::public(),
         final: true,
         name: 'setTags',
         args: [
@@ -94,7 +94,7 @@ PHP);
 test('abstract methods support non-public visibility', function () {
     $method = new PhpMethod(
         name: 'configure',
-        visibility: PhpMethod::VISIBILITY_PROTECTED,
+        visibility: PhpMethod::protected(),
         abstract: true,
         return: 'void',
     );

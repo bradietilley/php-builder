@@ -26,8 +26,8 @@ class PhpProperty extends Data implements ExportsPhp, ResolvesTypeImports
     public function __construct(
         public string $name,
         PhpType|string|null $type = null,
-        public string $visibility = self::VISIBILITY_PUBLIC,
-        public ?string $setVisibility = null,
+        public PhpVisibility $visibility = PhpVisibility::Public,
+        public ?PhpVisibility $setVisibility = null,
         public bool $static = false,
         public bool $readonly = false,
         public bool $abstract = false,
@@ -165,9 +165,9 @@ class PhpProperty extends Data implements ExportsPhp, ResolvesTypeImports
     protected function visibilitySignature(): array
     {
         if ($this->setVisibility === null || $this->setVisibility === $this->visibility) {
-            return [$this->visibility];
+            return [$this->visibility->value];
         }
 
-        return [$this->visibility, $this->setVisibility . '(set)'];
+        return [$this->visibility->value, $this->setVisibility->value . '(set)'];
     }
 }

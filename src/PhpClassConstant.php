@@ -24,7 +24,7 @@ class PhpClassConstant extends Data implements ExportsPhp, ResolvesTypeImports
     public function __construct(
         public string $name,
         public string $value,
-        public string $visibility = self::VISIBILITY_PUBLIC,
+        public PhpVisibility $visibility = PhpVisibility::Public,
         public bool $final = false,
         PhpType|string|null $type = null,
         #[ArrayOf(PhpAttribute::class)]
@@ -60,7 +60,7 @@ class PhpClassConstant extends Data implements ExportsPhp, ResolvesTypeImports
             $parts[] = 'final';
         }
 
-        $parts[] = $this->visibility;
+        $parts[] = $this->visibility->value;
         $parts[] = 'const';
 
         if ($this->type !== null) {

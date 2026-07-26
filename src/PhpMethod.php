@@ -27,7 +27,7 @@ class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
      */
     public function __construct(
         public string $name,
-        public string $visibility = self::VISIBILITY_PUBLIC,
+        public PhpVisibility $visibility = PhpVisibility::Public,
         public bool $static = false,
         public bool $final = false,
         public bool $abstract = false,
@@ -98,7 +98,7 @@ class PhpMethod extends Data implements ExportsPhp, ResolvesTypeImports
             $signature[] = 'abstract';
         }
 
-        $signature[] = $this->visibility;
+        $signature[] = $this->visibility->value;
 
         if ($this->static) {
             $signature[] = 'static';

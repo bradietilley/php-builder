@@ -38,7 +38,7 @@ $class = new PhpClass(
 );
 
 $class->methods[] = new PhpMethod(
-    visibility: PhpMethod::VISIBILITY_PUBLIC,
+    visibility: PhpMethod::public(),
     final: true,
     name: 'setTags',
     args: [

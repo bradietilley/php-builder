@@ -62,7 +62,7 @@ test('trait exports properties and methods', function () {
         methods: [
             new PhpMethod(
                 name: 'bootHasSlug',
-                visibility: PhpMethod::VISIBILITY_PROTECTED,
+                visibility: PhpMethod::protected(),
                 lines: ['//'],
             ),
         ],

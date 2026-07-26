@@ -14,7 +14,7 @@ class PhpTraitAlias extends Data implements ExportsPhp
     public function __construct(
         public string $method,
         public ?string $alias = null,
-        public ?string $visibility = null,
+        public ?PhpVisibility $visibility = null,
         public ?string $trait = null,
     ) {
     }
@@ -25,7 +25,7 @@ class PhpTraitAlias extends Data implements ExportsPhp
             ? $this->trait . '::' . $this->method
             : $this->method;
 
-        $right = trim(($this->visibility ?? '') . ' ' . ($this->alias ?? ''));
+        $right = trim(($this->visibility?->value ?? '') . ' ' . ($this->alias ?? ''));
 
         if ($right === '') {
             $right = $this->method;

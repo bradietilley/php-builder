@@ -9,7 +9,7 @@ use BradieTilley\Builder\Types\PhpUnionType;
 
 test('property exports readonly and defaults', function () {
     $property = new PhpProperty(
-        visibility: PhpProperty::VISIBILITY_PROTECTED,
+        visibility: PhpProperty::protected(),
         readonly: true,
         type: 'string',
         name: 'title',
@@ -21,8 +21,8 @@ test('property exports readonly and defaults', function () {
 
 test('property exports asymmetric visibility', function () {
     $property = new PhpProperty(
-        visibility: PhpProperty::VISIBILITY_PUBLIC,
-        setVisibility: PhpProperty::VISIBILITY_PRIVATE,
+        visibility: PhpProperty::public(),
+        setVisibility: PhpProperty::private(),
         type: 'string',
         name: 'name',
     );

@@ -31,8 +31,8 @@ class PhpArgument extends Data implements ExportsPhp, ResolvesTypeImports
         public bool $variadic = false,
         public bool $byRef = false,
         public bool $promoted = false,
-        public ?string $visibility = null,
-        public ?string $setVisibility = null,
+        public ?PhpVisibility $visibility = null,
+        public ?PhpVisibility $setVisibility = null,
         public bool $readonly = false,
         public bool $final = false,
         public ?string $description = null,
@@ -158,13 +158,13 @@ class PhpArgument extends Data implements ExportsPhp, ResolvesTypeImports
      */
     protected function visibilitySignature(): array
     {
-        $visibility = $this->visibility ?? self::VISIBILITY_PUBLIC;
+        $visibility = $this->visibility ?? PhpVisibility::Public;
 
         if ($this->setVisibility === null || $this->setVisibility === $visibility) {
-            return [$visibility];
+            return [$visibility->value];
         }
 
-        return [$visibility, $this->setVisibility . '(set)'];
+        return [$visibility->value, $this->setVisibility->value . '(set)'];
     }
 
     protected function indentMultiline(string $line, int $indent): string

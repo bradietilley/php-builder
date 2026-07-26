@@ -2,11 +2,22 @@
 
 namespace BradieTilley\Builder\Concerns;
 
+use BradieTilley\Builder\PhpVisibility;
+
 trait HasVisibility
 {
-    public const VISIBILITY_PUBLIC = 'public';
+    public static function public(): PhpVisibility
+    {
+        return PhpVisibility::Public;
+    }
 
-    public const VISIBILITY_PROTECTED = 'protected';
+    public static function protected(): PhpVisibility
+    {
+        return PhpVisibility::Protected;
+    }
 
-    public const VISIBILITY_PRIVATE = 'private';
+    public static function private(): PhpVisibility
+    {
+        return PhpVisibility::Private;
+    }
 }
