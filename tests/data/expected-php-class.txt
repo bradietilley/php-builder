@@ -102,6 +102,14 @@ abstract class KitchenSink extends Model implements Identifiable, Sluggable
     }
 
     /**
+     * @return Collection<string, int>
+     */
+    public function items(): Collection
+    {
+        return collect();
+    }
+
+    /**
      * @throws RuntimeException
      * @throws ModelNotFoundException
      */

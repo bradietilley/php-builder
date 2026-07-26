@@ -4,7 +4,7 @@ Anywhere a type is accepted (`PhpProperty::$type`, `PhpArgument::$type`,
 `PhpMethod::$return`, enum `backedType`, etc.) you may pass:
 
 - a **string** — becomes a `PhpNamedType` (`'string'`, `'App\\Models\\Post'`, `'static'`)
-- a **`PhpType` instance** — for arrays, unions, intersections, callables
+- a **`PhpType` instance** — for generics, unions, intersections, callables
 - `null` — omit the type
 
 Strings that look like FQCNs (`Contains\\Backslash`) are imported automatically
@@ -24,25 +24,44 @@ new PhpNamedType('integer'); // int
 
 Nullable named types render as `?Name` in PHP and `Name|null` in PHPDoc.
 
-## Array types
+## Generic types
 
-Native PHP only has `array`. Element (and optional key) types live in PHPDoc.
+Use `PhpGeneric` anywhere a type is accepted — properties, parameters, return
+types, and so on. Native PHP gets the base type; key/value type parameters live
+in PHPDoc (`@var` / `@param` / `@return`).
 
 ```php
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
-new PhpArrayType(value: 'string');
+PhpGeneric::array(value: 'string');
 // PHP: array   PHPDoc: array<string>
 
-new PhpArrayType(value: 'Illuminate\\Support\\Collection', key: 'string');
-// PHP: array   PHPDoc: array<string, Collection>
+PhpGeneric::array(key: 'array-key', value: 'string');
+// PHP: array   PHPDoc: array<array-key, string>
 
-new PhpArrayType(value: 'string', nullable: true);
-// PHP: ?array  PHPDoc: array<string>|null
+PhpGeneric::list(value: 'string', nullable: true);
+// PHP: ?array  PHPDoc: list<string>|null
+
+PhpGeneric::iterable(value: 'int');
+// PHP: iterable   PHPDoc: iterable<int>
+
+PhpGeneric::for('Illuminate\\Support\\Collection', key: 'string', value: 'int');
+// PHP: Collection   PHPDoc: Collection<string, int>
 ```
 
-`needsPhpDoc()` is always true for array types, so `@param` / `@var` / `@return`
-tags are emitted when the type is used on members.
+| Factory | Native PHP | Notes |
+| --- | --- | --- |
+| `::array(...)` | `array` | Optional `key`; value-only → `array<V>` |
+| `::list(...)` | `array` | `list` is PHPDoc-only |
+| `::iterable(...)` | `iterable` | Optional `key` |
+| `::for($name, ...)` | `$name` (imported if FQCN) | Arbitrary class / built-in generic |
+
+All factories accept `nullable: true` (`?Type` natively, `…\|null` in PHPDoc).
+`needsPhpDoc()` is always true, so doc tags are emitted on members.
+
+This is separate from declaring type parameters with [`PhpTemplate`](../attributes/README.md)
+(`@template` on classes/methods). `PhpGeneric` is for *using* generics in member
+types; `PhpTemplate` is for *declaring* them.
 
 ## Union types
 
@@ -117,7 +136,8 @@ return: 'string';
 type: 'App\\Models\\Post';
 
 // Prefer objects
-type: new PhpArrayType(value: 'string');
+type: PhpGeneric::array(value: 'string');
+type: PhpGeneric::for('Illuminate\\Support\\Collection', value: 'Post');
 type: new PhpUnionType(['string', 'int']);
 type: new PhpCallableType(parameters: ['self'], return: 'void');
 ```

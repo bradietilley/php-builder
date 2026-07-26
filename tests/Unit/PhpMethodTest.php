@@ -3,7 +3,7 @@
 use BradieTilley\Builder\PhpArgument;
 use BradieTilley\Builder\PhpAttribute;
 use BradieTilley\Builder\PhpMethod;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
 test('method exports visibility final and body lines', function () {
     $method = new PhpMethod(
@@ -12,7 +12,7 @@ test('method exports visibility final and body lines', function () {
         name: 'setTags',
         args: [
             new PhpArgument(
-                type: new PhpArrayType(value: 'string'),
+                type: PhpGeneric::array(value: 'string'),
                 name: 'tags',
                 defaultValue: '[]',
             ),
@@ -35,6 +35,24 @@ final public function setTags(array $tags = []): self
 {
     $this->tags = $tags;
     return $this;
+}
+PHP);
+});
+
+test('method return type supports class generics', function () {
+    $method = new PhpMethod(
+        name: 'items',
+        return: PhpGeneric::for('Illuminate\\Support\\Collection', key: 'string', value: 'int'),
+        lines: ['return collect();'],
+    );
+
+    expect($method->toPhp())->toBe(<<<'PHP'
+/**
+ * @return Illuminate\Support\Collection<string, int>
+ */
+public function items(): Illuminate\Support\Collection
+{
+    return collect();
 }
 PHP);
 });

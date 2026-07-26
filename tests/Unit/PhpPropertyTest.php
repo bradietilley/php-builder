@@ -4,7 +4,7 @@ use BradieTilley\Builder\Exceptions\InvalidPhpDefinitionException;
 use BradieTilley\Builder\PhpProperty;
 use BradieTilley\Builder\PhpPropertyGetHook;
 use BradieTilley\Builder\PhpPropertySetHook;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 use BradieTilley\Builder\Types\PhpUnionType;
 
 test('property exports readonly and defaults', function () {
@@ -60,7 +60,7 @@ PHP);
 
 test('property phpdoc includes generics', function () {
     $property = new PhpProperty(
-        type: new PhpArrayType(value: 'string'),
+        type: PhpGeneric::array(value: 'string'),
         name: 'tags',
         description: 'Tag list',
     );
@@ -70,6 +70,20 @@ test('property phpdoc includes generics', function () {
  * Tag list
  *
  * @var array<string> $tags
+ */
+public array $tags;
+PHP);
+});
+
+test('property list generic uses array natively', function () {
+    $property = new PhpProperty(
+        type: PhpGeneric::list(value: 'string'),
+        name: 'tags',
+    );
+
+    expect($property->toPhp())->toBe(<<<'PHP'
+/**
+ * @var list<string> $tags
  */
 public array $tags;
 PHP);

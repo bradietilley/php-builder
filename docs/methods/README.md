@@ -7,7 +7,7 @@ native types as strings or richer [`PhpType`](../types/README.md) instances.
 use BradieTilley\Builder\PhpArgument;
 use BradieTilley\Builder\PhpAttribute;
 use BradieTilley\Builder\PhpMethod;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
 new PhpMethod(
     name: 'setTags',
@@ -15,7 +15,7 @@ new PhpMethod(
     final: true,
     args: [
         new PhpArgument(
-            type: new PhpArrayType(value: 'string'),
+            type: PhpGeneric::array(value: 'string'),
             name: 'tags',
             defaultValue: '[]',
             description: 'Tag names',
@@ -77,6 +77,7 @@ new PhpMethod(name: 'resolve', returnsReference: true, return: 'mixed', lines: [
 ```php
 use BradieTilley\Builder\PhpTemplate;
 use BradieTilley\Builder\Types\PhpCallableType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
 new PhpMethod(
     name: 'map',
@@ -90,7 +91,7 @@ new PhpMethod(
             name: 'callback',
         ),
     ],
-    return: new PhpArrayType(value: 'TReturn'),
+    return: PhpGeneric::array(value: 'TReturn'),
     lines: ['return [];'],
 );
 ```

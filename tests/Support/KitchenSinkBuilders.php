@@ -16,7 +16,7 @@ use BradieTilley\Builder\PhpTrait;
 use BradieTilley\Builder\PhpTraitAlias;
 use BradieTilley\Builder\PhpTraitInsteadof;
 use BradieTilley\Builder\PhpUseTrait;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 use BradieTilley\Builder\Types\PhpCallableType;
 use BradieTilley\Builder\Types\PhpIntersectionType;
 use BradieTilley\Builder\Types\PhpNamedType;
@@ -91,7 +91,7 @@ function kitchenSinkClass(): PhpClass
                 setVisibility: PhpProperty::private(),
             ),
             new PhpProperty(
-                type: new PhpArrayType(value: 'Illuminate\\Support\\Collection', key: 'string'),
+                type: PhpGeneric::array(value: 'Illuminate\\Support\\Collection', key: 'string'),
                 name: 'meta',
                 static: true,
             ),
@@ -153,7 +153,7 @@ function kitchenSinkClass(): PhpClass
                         defaultValue: "'untitled'",
                     ),
                     new PhpArgument(
-                        type: new PhpArrayType(value: 'string'),
+                        type: PhpGeneric::array(value: 'string'),
                         name: 'flags',
                         defaultValue: '[]',
                         description: 'Optional feature flags',
@@ -185,9 +185,14 @@ function kitchenSinkClass(): PhpClass
                         name: 'callback',
                     ),
                 ],
-                return: new PhpArrayType(value: 'TReturn'),
+                return: PhpGeneric::array(value: 'TReturn'),
                 lines: ['return [];'],
                 description: 'Map values with a callback',
+            ),
+            new PhpMethod(
+                name: 'items',
+                return: PhpGeneric::for('Illuminate\\Support\\Collection', key: 'string', value: 'int'),
+                lines: ['return collect();'],
             ),
             new PhpMethod(
                 name: 'asEloquent',
@@ -266,7 +271,7 @@ function kitchenSinkClass(): PhpClass
     $class->methods[] = new PhpMethod(
         name: 'syncTags',
         args: [
-            new PhpArgument(type: new PhpArrayType(value: 'string'), name: 'tags'),
+            new PhpArgument(type: PhpGeneric::array(value: 'string'), name: 'tags'),
         ],
         return: 'static',
         lines: [
@@ -303,7 +308,7 @@ function kitchenSinkInterface(): PhpInterface
                 set: new PhpPropertySetHook(stub: true),
             ),
             new PhpProperty(
-                type: new PhpArrayType(value: 'App\\Enums\\Status'),
+                type: PhpGeneric::array(value: 'App\\Enums\\Status'),
                 name: 'statuses',
                 get: new PhpPropertyGetHook(stub: true),
             ),
@@ -471,7 +476,7 @@ function kitchenSinkTrait(): PhpTrait
                 defaultValue: 'true',
             ),
             new PhpProperty(
-                type: new PhpArrayType(value: 'string'),
+                type: PhpGeneric::array(value: 'string'),
                 name: 'buffer',
                 visibility: PhpProperty::private(),
             ),
@@ -490,7 +495,7 @@ function kitchenSinkTrait(): PhpTrait
             ),
             new PhpMethod(
                 name: 'flush',
-                return: new PhpArrayType(value: 'string'),
+                return: PhpGeneric::array(value: 'string'),
                 lines: [
                     '$copy = $this->buffer;',
                     '$this->buffer = [];',

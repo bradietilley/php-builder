@@ -10,7 +10,7 @@ use BradieTilley\Builder\PhpProperty;
 use BradieTilley\Builder\PhpTraitAlias;
 use BradieTilley\Builder\PhpTraitInsteadof;
 use BradieTilley\Builder\PhpUseTrait;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
 afterEach(function () {
     PhpFormatter::clear();
@@ -88,7 +88,7 @@ test('readme golden example', function () {
         name: 'setTags',
         args: [
             new PhpArgument(
-                type: new PhpArrayType(value: 'string'),
+                type: PhpGeneric::array(value: 'string'),
                 name: 'tags',
                 defaultValue: '[]',
             ),
@@ -164,7 +164,7 @@ test('nested array type fqcn is auto-imported for phpdoc', function () {
                 name: 'tags',
                 args: [
                     new PhpArgument(
-                        type: new PhpArrayType(value: 'Illuminate\\Support\\Collection'),
+                        type: PhpGeneric::array(value: 'Illuminate\\Support\\Collection'),
                         name: 'tags',
                     ),
                 ],

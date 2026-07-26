@@ -21,7 +21,7 @@ composer require bradietilley/php-builder
 use BradieTilley\Builder\PhpArgument;
 use BradieTilley\Builder\PhpClass;
 use BradieTilley\Builder\PhpMethod;
-use BradieTilley\Builder\Types\PhpArrayType;
+use BradieTilley\Builder\Types\PhpGeneric;
 
 $class = new PhpClass(
     namespace: "App\Models",
@@ -43,7 +43,7 @@ $class->methods[] = new PhpMethod(
     name: 'setTags',
     args: [
         new PhpArgument(
-            type: new PhpArrayType(value: 'string'),
+            type: PhpGeneric::array(value: 'string'),
             name: 'tags',
             defaultValue: '[]',
         ),
