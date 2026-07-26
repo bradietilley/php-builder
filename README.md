@@ -1,10 +1,10 @@
 # PHP Builder
 
-A PHP class builder
+A PHP code builder for programmatically generating classes, interfaces, traits,
+and enums — with imports, attributes, typed members, property hooks, and PHPDoc.
 
 ![Static Analysis](https://github.com/bradietilley/php-builder/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/bradietilley/php-builder/actions/workflows/tests.yml/badge.svg)
-![Laravel Version](https://img.shields.io/badge/Laravel%20Version-13.x-F9322C)
 ![PHP Version](https://img.shields.io/badge/PHP%20Version-8.3-4F5B93)
 
 ## Documentation
@@ -113,7 +113,7 @@ PhpFormatter::using(function (string $php): string {
 });
 ```
 
-See the [documentation](https://bradietilley.dev/php-builder) for attributes, property hooks, enums, interfaces, and traits.
+See the [documentation](https://bradietilley.dev/php-builder) for classes, interfaces, traits, enums, methods, properties & hooks, types, imports, attributes, formatting, and PHP targeting.
 
 ## Credits
 
