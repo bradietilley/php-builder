@@ -181,6 +181,23 @@ test('nested array type fqcn is auto-imported for phpdoc', function () {
         ->and($php)->toContain('function tags(array $tags)');
 });
 
+test('extends basename clashes with generated class name when import is called before toPhp', function () {
+    $class = new PhpClass(
+        namespace: 'App\\Models',
+        name: 'User',
+        extends: 'Illuminate\\Foundation\\Auth\\User',
+    );
+
+    $class->import('App\\Builders\\UserBuilder');
+
+    $php = $class->toPhp();
+
+    expect($php)
+        ->toContain('use Illuminate\\Foundation\\Auth\\User as UserAuth;')
+        ->toMatch('/class User extends UserAuth\b/')
+        ->not->toMatch('/class User extends User\b/');
+});
+
 test('explicit import alias still works for return type', function () {
     $class = new PhpClass(
         namespace: 'App\\Models',

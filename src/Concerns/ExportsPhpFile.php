@@ -29,6 +29,10 @@ trait ExportsPhpFile
      */
     protected function reserveStructuralNames(): void
     {
+        if (property_exists($this, 'name') && is_string($this->name) && $this->name !== '') {
+            $this->imports()->reserveLocalName($this->name);
+        }
+
         foreach ($this->structuralTypeNames() as $name) {
             $this->imports()->reserve($name);
         }

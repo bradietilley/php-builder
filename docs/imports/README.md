@@ -53,8 +53,11 @@ namespace segments, then a numeric suffix if needed:
 | `App\Models\Model` (extends) + `Illuminate\Database\Eloquent\Model` | `Model` + `ModelEloquent` |
 | Multiple remaining clashes | `ModelEloquent2`, … |
 
-Structural names (`extends` / `implements` / traits) are reserved **first**, so
-user imports lose the basename when they collide.
+Structural names (`extends` / `implements` / traits) are reserved after the
+generated type's own short name, so a class like `User` extending
+`Illuminate\Foundation\Auth\User` aliases the parent even when `import()` is
+called before `toPhp()`. User imports lose the basename when they collide with
+either the generated name or structural names.
 
 ## Import bag API
 
