@@ -32,8 +32,20 @@ class PhpNamedType extends Data implements PhpType
 
     public function withResolvedImports(ImportBag $imports): static
     {
-        if (! str_contains(ltrim($this->name, '\\'), '\\')) {
-            return $this;
+        $bare = ltrim($this->name, '\\');
+
+        // Already absolute global (`\SplFileInfo`) or a language type — leave alone.
+        if (! str_contains($bare, '\\')) {
+            if (self::isLanguageType($bare) || str_starts_with($this->name, '\\')) {
+                return $this;
+            }
+
+            // Unqualified non-language name from reflection (SplFileInfo, Closure).
+            // Emit absolute so it won't resolve under the generated file's namespace.
+            $resolved = clone $this;
+            $resolved->name = '\\'.$bare;
+
+            return $resolved;
         }
 
         $resolved = clone $this;
@@ -60,5 +72,14 @@ class PhpNamedType extends Data implements PhpType
         }
 
         return $this->name;
+    }
+
+    private static function isLanguageType(string $name): bool
+    {
+        return in_array($name, [
+            'int', 'string', 'bool', 'float', 'array', 'object', 'mixed',
+            'void', 'never', 'callable', 'iterable', 'false', 'true', 'null',
+            'self', 'static', 'parent',
+        ], true);
     }
 }
